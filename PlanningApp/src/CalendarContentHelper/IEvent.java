@@ -2,14 +2,14 @@ package CalendarContentHelper;
 
 import java.util.Date;
 
-interface IEvent 
+public interface IEvent 
 {
 	public int getID();
-	public int setID();
+	public void setID(int id);
 	public Date getDTSTART();
-	public Date setDTSTART();
-	public String setDURATION();
+	public void setDTSTART(Date date);
+	public void setDURATION(String duration);
 	public String getDURATION();
-	public String setTitle();
+	public void setTitle(String title);
 	public String getTitle();
 }
