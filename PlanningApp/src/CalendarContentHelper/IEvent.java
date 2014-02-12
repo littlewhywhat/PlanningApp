@@ -1,5 +1,6 @@
-import java.util.Date;
+package CalendarContentHelper;
 
+import java.util.Date;
 
 interface IEvent 
 {
