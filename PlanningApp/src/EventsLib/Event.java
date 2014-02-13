@@ -5,51 +5,54 @@ import java.util.Date;
 import CalendarContentHelper.IEvent;
 
 public class Event implements IEvent {
-	private int ID = 0;
+	private String ID = null;
+	private Date DTSTART = null;
+	private Date DTEND = null;
+	private String Title = null;
 	@Override
-	public int getID() {
+	public String getID() {
 		return ID;
 	}
 
 	@Override
-	public void setID(int id) {
+	public void setID(String id) {
 		ID = id;
 	}
 
 	@Override
 	public Date getDTSTART() {
 		// TODO Auto-generated method stub
-		return null;
+		return DTSTART;
 	}
 
 	@Override
 	public void setDTSTART(Date date) {
 		// TODO Auto-generated method stub
-
+		DTSTART = date;
 	}
 
 	@Override
-	public void setDURATION(String duration) {
+	public void setDTEND(Date date) {
 		// TODO Auto-generated method stub
-
+		DTEND = date;
 	}
 
 	@Override
-	public String getDURATION() {
+	public Date getDTEND() {
 		// TODO Auto-generated method stub
-		return null;
+		return DTEND;
 	}
 
 	@Override
 	public void setTitle(String title) {
 		// TODO Auto-generated method stub
-
+		Title = title;
 	}
 
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
-		return null;
+		return Title;
 	}
 
 }
