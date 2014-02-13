@@ -4,20 +4,22 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import CalendarContentHelper.*;
 import EventsLib.*;
 import junit.framework.Assert;
 
-public class CalendarHelperTest extends AndroidTestCase 
+public class EventsHelperTest extends AndroidTestCase 
 {
+	private final String TAG = "EventsHelperTest";
 	private int EventsDicSize = 0;
 	private Event Event1;
 	private Event Event2;
 	private Date DTSTART;
 	private Date DTEND;
 	private EventsDictionary EventsDic = new EventsDictionary();
-	private CalendarHelper helper;
+	private EventsHelper helper;
 	
 	private Date getDTSTART()
 	{
@@ -80,7 +82,7 @@ public class CalendarHelperTest extends AndroidTestCase
 	@Override
 	public void setUp()
 	{
-		helper = new CalendarHelper(getContext());
+		helper = new EventsHelper(getContext(), 1);
 		FillDic();
 		EventsDicSize = EventsDic.Size();
 		EventsDic.Clear();		
@@ -98,18 +100,21 @@ public class CalendarHelperTest extends AndroidTestCase
 	
 	private void testInsert() 
 	{
+		Log.i(TAG, "testInsert started");
 		InsertEvent(getEvent1());
 		Assert.assertTrue(getEvent1().getID() != null);	 
 	}
 
 	private void testFillIEventsDic(int size)
 	{
+		Log.i(TAG, "testFillIEventsDic");
 		FillDic();
 		Assert.assertTrue(EventsDic.Size() == size);		
 	}
 	
 	private void testDelete()
 	{
+		Log.i(TAG, "testDelete");
 		InsertEvent(getEvent2());
 		DeleteEvent(getEvent2());
 		Assert.assertEquals(null, getEvent2().getID());		
@@ -118,6 +123,7 @@ public class CalendarHelperTest extends AndroidTestCase
 	private final String _NewTitle = "New Title";
 	private void testUpdate()
 	{
+		Log.i(TAG, "testUpdate");
 		getEvent1().setTitle(_NewTitle);
 		UpdateEvent(getEvent1());
 		FillDic();

@@ -8,12 +8,14 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 
-public class CalendarHelper 
+public class EventsHelper 
 {
-	private final String TAG = "CalendarHelper";
+	private final String TAG = "EventsHelper";
 	private Context appContext;	
-	public CalendarHelper(Context context)
+	private int CalendarId = 0;
+	public EventsHelper(Context context, int calendarId)
 	{
+		CalendarId = calendarId;
 		appContext = context;
 		Log.i(TAG, "Created");
 	}
@@ -33,6 +35,7 @@ public class CalendarHelper
 		event.setDTEND(new Date(cursor.getLong(PROJECTION_DTEND_INDEX)));
 		return event;
 	}
+
 	private Cursor getCursorByDateInterval(String[] selectionArgs) 
 	{	
 		return appContext.getContentResolver()
@@ -62,7 +65,7 @@ public class CalendarHelper
 	private ContentValues getContentValuesForEvent(IEvent event)
 	{
 		ContentValues values = new ContentValues();		
-		values.put(Events.CALENDAR_ID, 1);
+		values.put(Events.CALENDAR_ID, CalendarId);
 		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 		values.put(Events.DTSTART, event.getDTSTART().getTime());
 		values.put(Events.DTEND, event.getDTEND().getTime());
