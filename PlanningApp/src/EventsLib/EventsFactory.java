@@ -7,7 +7,6 @@ public class EventsFactory implements IEventsFactory {
 
 	@Override
 	public IEvent GetNewEvent() {
-		// TODO Auto-generated method stub
 		return new Event();
 	}
 

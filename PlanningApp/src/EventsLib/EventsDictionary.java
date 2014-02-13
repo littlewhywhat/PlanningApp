@@ -2,7 +2,6 @@ package EventsLib;
 
 import java.util.Hashtable;
 
-import android.util.*;
 
 
 import CalendarContentHelper.IEvent;
@@ -15,13 +14,11 @@ public class EventsDictionary implements IEventsDictionary {
 	private Hashtable<String,Event> EventsDic = new Hashtable<String,Event>();
 	@Override
 	public void AddIEvent(IEvent event) {
-		// TODO Auto-generated method stub
 		EventsDic.put(event.getID(), (Event)event);
 	}
 
 	@Override
 	public IEventsFactory GetFactory() {
-		// TODO Auto-generated method stub
 		return Factory;
 	}
 	
