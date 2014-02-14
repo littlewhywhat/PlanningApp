@@ -11,19 +11,9 @@ public class Event extends ContentItem implements IEvent {
 		super(factory);
 	}
 
-	private String ID = null;
 	private Date DTSTART = null;
 	private Date DTEND = null;
 	private String Title = null;
-	@Override
-	public String getID() {
-		return ID;
-	}
-
-	@Override
-	public void setID(String id) {
-		ID = id;
-	}
 
 	@Override
 	public Date getDTSTART() {

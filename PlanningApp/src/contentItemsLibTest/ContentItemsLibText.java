@@ -65,14 +65,14 @@ public class ContentItemsLibText extends AndroidTestCase
 
 	private void fillEventsDic()
 	{
-		if (EventsDic.Size() > 0)
-			EventsDic.Clear();
+		if (EventsDic.getList().size() > 0)
+			EventsDic.getList().clear();
 		EventsDic.Fill(new DateInterval(getDTSTART(), getDTEND()));
 	}
 	private void fillCalendarsDic()
 	{
-		if (CalendarsDic.size() > 0)
-			CalendarsDic.clear();
+		if (CalendarsDic.getList().size() > 0)
+			CalendarsDic.getList().clear();
 		CalendarsDic.Fill();
 	}
 	
@@ -86,10 +86,10 @@ public class ContentItemsLibText extends AndroidTestCase
 	{		
 		CalendarsDic = new CalendarsDictionary(getContext());
 		fillCalendarsDic();
-		EventsDic = new EventsDictionary(getContext(), CalendarsDic.getFirst().getID());
+		EventsDic = new EventsDictionary(getContext(), CalendarsDic.getList().get(0).getID());
 		fillEventsDic();
-		EventsDicSize = EventsDic.Size();
-		EventsDic.Clear();		
+		EventsDicSize = EventsDic.getList().size();
+		EventsDic.getList().clear();		
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class ContentItemsLibText extends AndroidTestCase
 	{
 		Log.i(TAG, "FillingICalendarsDic");
 		fillCalendarsDic();
-		Assert.assertTrue(0 != CalendarsDic.size());
+		Assert.assertTrue(0 != CalendarsDic.getList().size());
 	}
 	
 	private void testInsert() 
@@ -121,7 +121,7 @@ public class ContentItemsLibText extends AndroidTestCase
 	{
 		Log.i(TAG, "testFillIEventsDic");
 		fillEventsDic();
-		Assert.assertTrue(EventsDic.Size() == size);		
+		Assert.assertTrue(EventsDic.getList().size() == size);		
 	}
 	
 	private void testDelete()
@@ -139,14 +139,14 @@ public class ContentItemsLibText extends AndroidTestCase
 		getEvent1().setTitle(_NewTitle);
 		getEvent1().Update();
 		fillEventsDic();
-		Assert.assertEquals(_NewTitle, EventsDic.GetFirst().getTitle());
+		Assert.assertEquals(_NewTitle, ((Event)EventsDic.findItemById(getEvent1().getID())).getTitle());
 	}
 	
 	@Override
 	protected void tearDown()
 	{		
 		fillEventsDic();
-		if (EventsDic.Size() != EventsDicSize)
+		if (EventsDic.getList().size() != EventsDicSize)
 		{
 			if (getEvent1().getID() != null)
 				getEvent1().Delete();

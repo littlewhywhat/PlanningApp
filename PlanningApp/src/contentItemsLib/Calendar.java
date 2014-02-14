@@ -9,13 +9,7 @@ public class Calendar extends ContentItem implements ICalendar
 		super(factory);
 	}
 
-	private String ID;
 	private String Name;
-	@Override
-	public String getID() {	return ID; }
-
-	@Override
-	public void setID(String id) { ID = id; }
 
 	@Override
 	public String getName() { return Name; }
