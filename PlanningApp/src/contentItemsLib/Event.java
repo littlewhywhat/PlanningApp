@@ -1,10 +1,16 @@
-package EventsLib;
+package contentItemsLib;
 
 import java.util.Date;
 
-import CalendarContentHelper.IEvent;
+import CalendarContentHelper.ContentHelper;
+import CalendarContentHelper.EventsHelper;
+import CalendarContentHelper.IContentItem.IEvent;
 
-public class Event implements IEvent {
+public class Event extends ContentItem implements IEvent {
+	public Event(ContentItemsFactory factory) {
+		super(factory);
+	}
+
 	private String ID = null;
 	private Date DTSTART = null;
 	private Date DTEND = null;
@@ -53,6 +59,12 @@ public class Event implements IEvent {
 	public String getTitle() {
 		// TODO Auto-generated method stub
 		return Title;
+	}
+
+	@Override
+	protected ContentHelper getHelper() {
+		// TODO Auto-generated method stub
+		return new EventsHelper(getFactory().getContext(), ((EventsFactory)getFactory()).getCalendarId());
 	}
 
 }

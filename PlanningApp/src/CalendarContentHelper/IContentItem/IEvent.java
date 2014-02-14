@@ -1,11 +1,10 @@
-package CalendarContentHelper;
+package CalendarContentHelper.IContentItem;
 
 import java.util.Date;
 
-public interface IEvent 
+
+public interface IEvent extends IContentItem
 {
-	public String getID();
-	public void setID(String id);
 	public Date getDTSTART();
 	public void setDTSTART(Date date);
 	public void setDTEND(Date date);

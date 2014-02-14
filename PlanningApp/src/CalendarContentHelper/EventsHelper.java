@@ -1,52 +1,20 @@
 package CalendarContentHelper;
 import java.util.*;
 
+import CalendarContentHelper.IContentItem.IContentItem;
+import CalendarContentHelper.IContentItem.IEvent;
 import android.content.*;
 import android.database.Cursor;
 
+import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 
-public class EventsHelper 
+public class EventsHelper extends ContentHelper
 {
 	private final String TAG = "EventsHelper";
-	private Context appContext;	
-	private int CalendarId = 0;
-	public EventsHelper(Context context, int calendarId)
-	{
-		CalendarId = calendarId;
-		appContext = context;
-		Log.i(TAG, "Created");
-	}
-	public void FillIEventsDic(IEventsDictionary eventsDic, DateInterval interval)
-	{
-		Log.i(TAG, "FillingDic");
-		Cursor cursor = getCursorByDateInterval(getSelectionArgs(interval));
-		while (cursor.moveToNext())
-			eventsDic.AddIEvent(fillEventByCursor(cursor, eventsDic.GetFactory().GetNewEvent()));
-	}
-	
-	private IEvent fillEventByCursor(Cursor cursor, IEvent event) 
-	{	
-		event.setID(cursor.getString(PROJECTION_ID_INDEX));
-		event.setTitle(cursor.getString(PROJECTION_TITLE_INDEX));
-		event.setDTSTART(new Date(cursor.getLong(PROJECTION_DTSTART_INDEX)));
-		event.setDTEND(new Date(cursor.getLong(PROJECTION_DTEND_INDEX)));
-		return event;
-	}
-
-	private Cursor getCursorByDateInterval(String[] selectionArgs) 
-	{	
-		return appContext.getContentResolver()
-				.query(Events.CONTENT_URI, EVENT_PROJECTION, selection, selectionArgs , null);
-	}
-	private String[] getSelectionArgs(DateInterval interval) {
-		return new String[] { String.valueOf(interval.getDTSTART().getTime()), 
-				  		      String.valueOf(interval.getDTEND().getTime()) };		
-	}
-	private final String selection = "((" + CalendarContract.Events.DTSTART + " >= ?) AND (" 
-	                        + CalendarContract.Events.DTEND + " <= ?)) ";
+	private String CalendarId;
 	private static final String[] EVENT_PROJECTION = new String[] {
 		CalendarContract.Events._ID,                    // 0
 		CalendarContract.Events.TITLE,                  // 1
@@ -57,10 +25,51 @@ public class EventsHelper
 	private static final int PROJECTION_TITLE_INDEX = 1;
 	private static final int PROJECTION_DTSTART_INDEX = 2;
 	private static final int PROJECTION_DTEND_INDEX = 3;
+	private final String selection = "((" + CalendarContract.Events.DTSTART + " >= ?) AND (" 
+            + CalendarContract.Events.DTEND + " <= ?)) ";
+	public EventsHelper(Context context, String calendarId)
+	{
+		super(context);
+		CalendarId = calendarId;
+		Log.i(TAG, "Created");
+	}
+	@Override
+	protected void fillIContentItemOtherFields(Cursor cursor, IContentItem contentItem) 
+	{
+		IEvent event = (IEvent)contentItem;
+		event.setTitle(cursor.getString(PROJECTION_TITLE_INDEX));
+		event.setDTSTART(new Date(cursor.getLong(PROJECTION_DTSTART_INDEX)));
+		event.setDTEND(new Date(cursor.getLong(PROJECTION_DTEND_INDEX)));	
+	}
+	@Override
+	protected int getProjectionIdIndex() 
+	{
+		return PROJECTION_ID_INDEX;
+	}
+	@Override
+	protected Uri getContentUri() 
+	{
+		return Events.CONTENT_URI;
+	}
+	@Override
+	protected String[] getProjection() 
+	{
+		return EVENT_PROJECTION;
+	}
+	@Override
+	protected String getSelection() {
+		return selection;
+	}
+
+	public void FillIEventsDic(IContentItemsDictionary eventsDic, DateInterval interval)
+	{
+		Log.i(TAG, "FillingDic");
+		this.FillIContentItemDic(eventsDic, interval.ConvertToStringArgs());
+	}
 	
 	private ContentResolver getResolver()
 	{
-		return appContext.getContentResolver();
+		return getAppContext().getContentResolver();
 	}
 	private ContentValues getContentValuesForEvent(IEvent event)
 	{
@@ -72,28 +81,25 @@ public class EventsHelper
 		values.put(Events.TITLE, event.getTitle());
 		return values;
 	}
-	
-	public void FillIEventsDic(IEventsDictionary eventsDic)
-	{   
-		Cursor cursor = getCursorByDateInterval(null);
-		while (cursor.moveToNext())
-			eventsDic.AddIEvent(fillEventByCursor(cursor, eventsDic.GetFactory().GetNewEvent()));
-	}
-	
-	public void Update(IEvent event)
+	@Override	
+	public void Update(IContentItem item)
 	{
-		getResolver().update(ContentUris.withAppendedId(Events.CONTENT_URI, 
+		IEvent event = (IEvent)item;
+		getResolver().update(ContentUris.withAppendedId(getContentUri(), 
 				Long.parseLong(event.getID())), getContentValuesForEvent(event), null, null);
 	}
-	
-	public void Delete(IEvent event)
+	@Override
+	public void Delete(IContentItem item)
 	{
-		if (0 != getResolver().delete(ContentUris.withAppendedId(Events.CONTENT_URI, Long.parseLong(event.getID())), null, null))
+		IEvent event = (IEvent)item;
+		if (0 != getResolver().delete(ContentUris.withAppendedId(getContentUri(), Long.parseLong(event.getID())), null, null))
 			event.setID(null);		
 	}
-	
-	public void Insert(IEvent event)
+	@Override
+	public void Insert(IContentItem item)
 	{
-		event.setID(getResolver().insert(Events.CONTENT_URI, getContentValuesForEvent(event)).getLastPathSegment());			
+		IEvent event = (IEvent)item;
+		event.setID(getResolver().insert(getContentUri(), getContentValuesForEvent(event)).getLastPathSegment());			
 	}
+	
 }

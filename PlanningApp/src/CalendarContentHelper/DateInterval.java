@@ -42,4 +42,10 @@ public class DateInterval
 		calendar.set(Calendar.MILLISECOND, 999);
 		return calendar.getTime();
 	}
+	
+	public String[] ConvertToStringArgs()
+	{
+		return new String[] { String.valueOf(getDTSTART().getTime()), 
+	  		      String.valueOf(getDTEND().getTime()) };
+	}
 }

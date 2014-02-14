@@ -3,11 +3,14 @@ package CalendarContentHelperTest;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import contentItemsLib.CalendarsDictionary;
+import contentItemsLib.Event;
+import contentItemsLib.EventsDictionary;
+
 import android.test.AndroidTestCase;
 import android.util.Log;
 
 import CalendarContentHelper.*;
-import EventsLib.*;
 import junit.framework.Assert;
 
 public class EventsHelperTest extends AndroidTestCase 
@@ -18,8 +21,10 @@ public class EventsHelperTest extends AndroidTestCase
 	private Event Event2;
 	private Date DTSTART;
 	private Date DTEND;
-	private EventsDictionary EventsDic = new EventsDictionary();
-	private EventsHelper helper;
+	private EventsDictionary EventsDic;
+	private CalendarsDictionary CalendarsDic;
+	private EventsHelper eventsHelper;
+	private CalendarsHelper calendarsHelper;
 	
 	private Date getDTSTART()
 	{
@@ -33,11 +38,15 @@ public class EventsHelperTest extends AndroidTestCase
 			DTEND = getCustomDate(1691,1,2,13,1,1);
 		return DTEND;
 	}
+	private Event getEmptyEvent()
+	{
+		return (Event)EventsDic.getFactory().getNewContentItem();
+	}
 	private Event getEvent1()
 	{
 		if (Event1 == null)
 		{
-			Event1 = new Event();
+			Event1 = getEmptyEvent();
 			Event1.setTitle("Event 1");
 			Event1.setDTSTART(getDTSTART());
 			Event1.setDTEND(DateInterval.AdvHMS(getDTSTART()));
@@ -48,7 +57,7 @@ public class EventsHelperTest extends AndroidTestCase
 	{
 		if (Event2 == null)
 		{
-			Event2 = new Event();
+			Event2 = getEmptyEvent();
 			Event2.setTitle("Event 2");
 			Event2.setDTSTART(DateInterval.TrimHMS(getDTEND()));
 			Event2.setDTEND(getDTEND());
@@ -57,21 +66,27 @@ public class EventsHelperTest extends AndroidTestCase
 	}
 	private void InsertEvent(Event event)
 	{
-		helper.Insert(event);
+		eventsHelper.Insert(event);
 	}
 	private void DeleteEvent(Event event)
 	{
-		helper.Delete(event);
+		eventsHelper.Delete(event);
 	}
 	private void UpdateEvent(Event event)
 	{
-		helper.Update(event);
+		eventsHelper.Update(event);
 	}
-	private void FillDic()
+	private void fillEventsDic()
 	{
 		if (EventsDic.Size() > 0)
 			EventsDic.Clear();
-		helper.FillIEventsDic(EventsDic, new DateInterval(getDTSTART(), getDTEND()));
+		eventsHelper.FillIEventsDic(EventsDic, new DateInterval(getDTSTART(), getDTEND()));
+	}
+	private void fillCalendarsDic()
+	{
+		if (CalendarsDic.size() > 0)
+			CalendarsDic.clear();
+		calendarsHelper.FillIContentItemDic(CalendarsDic);
 	}
 	
 	private Date getCustomDate(int year, int month, int day, int hours, int minutes, int seconds)
@@ -81,9 +96,13 @@ public class EventsHelperTest extends AndroidTestCase
 	}
 	@Override
 	public void setUp()
-	{
-		helper = new EventsHelper(getContext(), 1);
-		FillDic();
+	{		
+		CalendarsDic = new CalendarsDictionary(getContext());
+		calendarsHelper = new CalendarsHelper(getContext());
+		fillCalendarsDic();
+		EventsDic = new EventsDictionary(getContext(), CalendarsDic.getFirst().getID());
+		eventsHelper = new EventsHelper(getContext(), CalendarsDic.getFirst().getID());
+		fillEventsDic();
 		EventsDicSize = EventsDic.Size();
 		EventsDic.Clear();		
 	}
@@ -91,11 +110,19 @@ public class EventsHelperTest extends AndroidTestCase
 	@Override
 	public void testAndroidTestCaseSetupProperly()
 	{
+		testFillICalendarsDic();
 		testFillIEventsDic(EventsDicSize);
 		testInsert();
 		testDelete();
 		testFillIEventsDic(EventsDicSize + 1);
 		testUpdate();
+	}
+	
+	private void testFillICalendarsDic()
+	{
+		Log.i(TAG, "FillingICalendarsDic");
+		fillCalendarsDic();
+		Assert.assertTrue(0 != CalendarsDic.size());
 	}
 	
 	private void testInsert() 
@@ -108,7 +135,7 @@ public class EventsHelperTest extends AndroidTestCase
 	private void testFillIEventsDic(int size)
 	{
 		Log.i(TAG, "testFillIEventsDic");
-		FillDic();
+		fillEventsDic();
 		Assert.assertTrue(EventsDic.Size() == size);		
 	}
 	
@@ -126,14 +153,14 @@ public class EventsHelperTest extends AndroidTestCase
 		Log.i(TAG, "testUpdate");
 		getEvent1().setTitle(_NewTitle);
 		UpdateEvent(getEvent1());
-		FillDic();
+		fillEventsDic();
 		Assert.assertEquals(_NewTitle, EventsDic.GetFirst().getTitle());
 	}
 	
 	@Override
 	protected void tearDown()
 	{		
-		FillDic();
+		fillEventsDic();
 		if (EventsDic.Size() != EventsDicSize)
 		{
 			if (getEvent1().getID() != null)
