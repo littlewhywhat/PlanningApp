@@ -11,7 +11,7 @@ public class CalendarsHelper extends ContentHelper
 {
 	private final String selection = "((" + CalendarContract.Calendars.VISIBLE + " = ?) AND (" 
             + CalendarContract.Calendars.SYNC_EVENTS + " = ?)) ";
-	private final String[] selectionArgs = new String[] { "1" , "1" };
+	public static final String[] SelectionArgs = new String[] { "1" , "1" };
 	private static final String[] CALENDAR_PROJECTION = new String[] {
 		CalendarContract.Calendars._ID,                      // 0
 		CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,    // 1
@@ -52,7 +52,7 @@ public class CalendarsHelper extends ContentHelper
 	}
 	public void FillIContentItemDic(IContentItemsDictionary dic)
 	{
-		FillIContentItemDic(dic, selectionArgs);
+		FillIContentItemDic(dic, SelectionArgs);
 	}
 	@Override
 	public void Update(IContentItem item) {

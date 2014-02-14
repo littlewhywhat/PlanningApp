@@ -14,7 +14,7 @@ public class CalendarsDictionary extends ContentItemsDictionary {
 	}
 	public void Fill()
 	{
-		Fill(null);
+		Fill(CalendarsHelper.SelectionArgs);
 	}
 	
 	private Hashtable<String,Calendar> CalendarsDic = new Hashtable<String,Calendar>();

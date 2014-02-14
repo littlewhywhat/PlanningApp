@@ -1,4 +1,4 @@
-package CalendarContentHelperTest;
+package contentItemsLibTest;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,9 +13,9 @@ import android.util.Log;
 import CalendarContentHelper.*;
 import junit.framework.Assert;
 
-public class EventsHelperTest extends AndroidTestCase 
+public class ContentItemsLibText extends AndroidTestCase 
 {
-	private final String TAG = "EventsHelperTest";
+	private final String TAG = "ContentItemsLibTest";
 	private int EventsDicSize = 0;
 	private Event Event1;
 	private Event Event2;
@@ -23,8 +23,6 @@ public class EventsHelperTest extends AndroidTestCase
 	private Date DTEND;
 	private EventsDictionary EventsDic;
 	private CalendarsDictionary CalendarsDic;
-	private EventsHelper eventsHelper;
-	private CalendarsHelper calendarsHelper;
 	
 	private Date getDTSTART()
 	{
@@ -64,29 +62,18 @@ public class EventsHelperTest extends AndroidTestCase
 		}
 		return Event2;
 	}
-	private void InsertEvent(Event event)
-	{
-		eventsHelper.Insert(event);
-	}
-	private void DeleteEvent(Event event)
-	{
-		eventsHelper.Delete(event);
-	}
-	private void UpdateEvent(Event event)
-	{
-		eventsHelper.Update(event);
-	}
+
 	private void fillEventsDic()
 	{
 		if (EventsDic.Size() > 0)
 			EventsDic.Clear();
-		eventsHelper.FillIEventsDic(EventsDic, new DateInterval(getDTSTART(), getDTEND()));
+		EventsDic.Fill(new DateInterval(getDTSTART(), getDTEND()));
 	}
 	private void fillCalendarsDic()
 	{
 		if (CalendarsDic.size() > 0)
 			CalendarsDic.clear();
-		calendarsHelper.FillIContentItemDic(CalendarsDic);
+		CalendarsDic.Fill();
 	}
 	
 	private Date getCustomDate(int year, int month, int day, int hours, int minutes, int seconds)
@@ -98,10 +85,8 @@ public class EventsHelperTest extends AndroidTestCase
 	public void setUp()
 	{		
 		CalendarsDic = new CalendarsDictionary(getContext());
-		calendarsHelper = new CalendarsHelper(getContext());
 		fillCalendarsDic();
 		EventsDic = new EventsDictionary(getContext(), CalendarsDic.getFirst().getID());
-		eventsHelper = new EventsHelper(getContext(), CalendarsDic.getFirst().getID());
 		fillEventsDic();
 		EventsDicSize = EventsDic.Size();
 		EventsDic.Clear();		
@@ -127,8 +112,8 @@ public class EventsHelperTest extends AndroidTestCase
 	
 	private void testInsert() 
 	{
-		Log.i(TAG, "testInsert started");
-		InsertEvent(getEvent1());
+		Log.i(TAG, "testInsertEvent started");
+		getEvent1().Insert();
 		Assert.assertTrue(getEvent1().getID() != null);	 
 	}
 
@@ -141,18 +126,18 @@ public class EventsHelperTest extends AndroidTestCase
 	
 	private void testDelete()
 	{
-		Log.i(TAG, "testDelete");
-		InsertEvent(getEvent2());
-		DeleteEvent(getEvent2());
+		Log.i(TAG, "testDeleteEvent");
+		getEvent2().Insert();
+		getEvent2().Delete();
 		Assert.assertEquals(null, getEvent2().getID());		
 	}
 	
 	private final String _NewTitle = "New Title";
 	private void testUpdate()
 	{
-		Log.i(TAG, "testUpdate");
+		Log.i(TAG, "testUpdateEvent");
 		getEvent1().setTitle(_NewTitle);
-		UpdateEvent(getEvent1());
+		getEvent1().Update();
 		fillEventsDic();
 		Assert.assertEquals(_NewTitle, EventsDic.GetFirst().getTitle());
 	}
@@ -164,9 +149,9 @@ public class EventsHelperTest extends AndroidTestCase
 		if (EventsDic.Size() != EventsDicSize)
 		{
 			if (getEvent1().getID() != null)
-				DeleteEvent(getEvent1());
+				getEvent1().Delete();
 			if (getEvent2().getID() != null)
-				DeleteEvent(getEvent2());
+				getEvent2().Delete();
 		}
 	}
 	
