@@ -1,5 +1,8 @@
 <resources>
 
     <string name="app_name">PlanningAppMain</string>
+    <string name="input_date_code">&quot;input_date&quot;</string>
+    <string name="choose_button_text">Choose a date</string>
+    <string name="choose_calendar_text">Choose a calendar</string>
 
 </resources>

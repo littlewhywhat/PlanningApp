@@ -1,6 +1,8 @@
 package contentItemsLib;
 
-import java.util.Date;
+
+
+import android.text.format.Time;
 
 import CalendarContentHelper.ContentHelper;
 import CalendarContentHelper.EventsHelper;
@@ -11,30 +13,30 @@ public class Event extends ContentItem implements IEvent {
 		super(factory);
 	}
 
-	private Date DTSTART = null;
-	private Date DTEND = null;
+	private Time DTSTART = new Time();
+	private Time DTEND = new Time();
 	private String Title = null;
 
 	@Override
-	public Date getDTSTART() {
+	public Time getDTSTART() {
 		// TODO Auto-generated method stub
 		return DTSTART;
 	}
 
 	@Override
-	public void setDTSTART(Date date) {
+	public void setDTSTART(long millis) {
 		// TODO Auto-generated method stub
-		DTSTART = date;
+		DTSTART.set(millis);
 	}
 
 	@Override
-	public void setDTEND(Date date) {
+	public void setDTEND(long millis) {
 		// TODO Auto-generated method stub
-		DTEND = date;
+		DTEND.set(millis);
 	}
 
 	@Override
-	public Date getDTEND() {
+	public Time getDTEND() {
 		// TODO Auto-generated method stub
 		return DTEND;
 	}

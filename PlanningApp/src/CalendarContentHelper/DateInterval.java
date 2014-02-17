@@ -1,51 +1,45 @@
 package CalendarContentHelper;
 import java.util.*;
 
+import android.text.format.Time;
+
 public class DateInterval 
 {
-	private Date DTSTART;
-	private Date DTEND;
+	private Time DTSTART;
+	private Time DTEND;
 	
-	public Date getDTSTART() { return DTSTART; }
-	public void setDTSTART(Date date) { DTSTART = date; }
-	public Date getDTEND() { return DTEND; }
-	public void setDTEND(Date date) { DTEND = date; }
-	public DateInterval(Date date)
+	private Time getDTSTART() { return DTSTART; }
+	private void setDTSTART(Time time) { DTSTART = time; }
+	private Time getDTEND() { return DTEND; }
+	private void setDTEND(Time time) { DTEND = time; }
+	public DateInterval(Time time)
 	{		
-		setDTSTART(TrimHMS(date));		
-		setDTEND(AdvHMS(date));
+		setDTSTART(TrimHMS(time));		
+		setDTEND(AdvHMS(time));
 	}
-	public DateInterval(Date dTSTART, Date dTEND)
+	public DateInterval(Time dTSTART, Time dTEND)
 	{
 		setDTSTART(dTSTART);
 		setDTEND(dTEND);
 	}
 	
-	public static Date TrimHMS(Date date)
+	public static Time TrimHMS(Time time)
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-		return calendar.getTime();
+		Time newTime = new Time();
+		newTime.set(0, 0, 0, time.monthDay, time.month, time.year);		
+		return newTime;
 	}
 	
-	public static Date AdvHMS(Date date)
+	public static Time AdvHMS(Time time)
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.SECOND, 59);
-		calendar.set(Calendar.MILLISECOND, 999);
-		return calendar.getTime();
+		Time newTime = new Time();
+		newTime.set(0, 0, 0, time.monthDay+1, time.month, time.year);
+		return newTime;
 	}
 	
 	public String[] ConvertToStringArgs()
 	{
-		return new String[] { String.valueOf(getDTSTART().getTime()), 
-	  		      String.valueOf(getDTEND().getTime()) };
+		return new String[] { String.valueOf(getDTSTART().toMillis(true)), 
+	  		      String.valueOf(getDTEND().toMillis(true))};
 	}
 }

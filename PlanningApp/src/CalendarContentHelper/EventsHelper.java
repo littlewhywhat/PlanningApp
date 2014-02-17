@@ -38,8 +38,8 @@ public class EventsHelper extends ContentHelper
 	{
 		IEvent event = (IEvent)contentItem;
 		event.setTitle(cursor.getString(PROJECTION_TITLE_INDEX));
-		event.setDTSTART(new Date(cursor.getLong(PROJECTION_DTSTART_INDEX)));
-		event.setDTEND(new Date(cursor.getLong(PROJECTION_DTEND_INDEX)));	
+		event.setDTSTART(cursor.getLong(PROJECTION_DTSTART_INDEX));
+		event.setDTEND(cursor.getLong(PROJECTION_DTEND_INDEX));	
 	}
 	@Override
 	protected int getProjectionIdIndex() 
@@ -76,8 +76,8 @@ public class EventsHelper extends ContentHelper
 		ContentValues values = new ContentValues();		
 		values.put(Events.CALENDAR_ID, CalendarId);
 		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
-		values.put(Events.DTSTART, event.getDTSTART().getTime());
-		values.put(Events.DTEND, event.getDTEND().getTime());
+		values.put(Events.DTSTART, event.getDTEND().toMillis(true));
+		values.put(Events.DTEND, event.getDTEND().toMillis(true));
 		values.put(Events.TITLE, event.getTitle());
 		return values;
 	}

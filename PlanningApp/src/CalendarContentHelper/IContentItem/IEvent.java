@@ -1,14 +1,15 @@
 package CalendarContentHelper.IContentItem;
 
-import java.util.Date;
+
+import android.text.format.Time;
 
 
 public interface IEvent extends IContentItem
 {
-	public Date getDTSTART();
-	public void setDTSTART(Date date);
-	public void setDTEND(Date date);
-	public Date getDTEND();
+	public Time getDTSTART();
+	public void setDTSTART(long millis);
+	public void setDTEND(long millis);
+	public Time getDTEND();
 	public void setTitle(String title);
 	public String getTitle();
 }
