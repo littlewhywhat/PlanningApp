@@ -8,10 +8,8 @@ import CalendarContentHelper.IContentItem.IContentItem;
 public abstract class ContentItemsFactory implements IContentItemsFactory {
 	ContentHelper helper;
 	Context appContext;
-	public ContentItemsFactory(Context context)
-	{
-		appContext = context;
-		
+	public ContentItemsFactory(Context context)	{
+		appContext = context;		
 	}
 	public ContentHelper getHelper() { return helper; }
 	public Context getContext() { return appContext; }
