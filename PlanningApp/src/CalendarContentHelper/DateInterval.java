@@ -1,5 +1,4 @@
 package CalendarContentHelper;
-import java.util.*;
 
 import android.text.format.Time;
 
@@ -8,9 +7,9 @@ public class DateInterval
 	private Time DTSTART;
 	private Time DTEND;
 	
-	private Time getDTSTART() { return DTSTART; }
+	public Time getDTSTART() { return DTSTART; }
 	private void setDTSTART(Time time) { DTSTART = time; }
-	private Time getDTEND() { return DTEND; }
+	public Time getDTEND() { return DTEND; }
 	private void setDTEND(Time time) { DTEND = time; }
 	public DateInterval(Time time)
 	{		

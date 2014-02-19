@@ -1,11 +1,7 @@
 package contentItemsLibTest;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
 
-import contentItemsLib.CalendarsDictionary;
-import contentItemsLib.Event;
-import contentItemsLib.EventsDictionary;
+import contentItemsLib.*;
 
 import android.test.AndroidTestCase;
 import android.text.format.Time;

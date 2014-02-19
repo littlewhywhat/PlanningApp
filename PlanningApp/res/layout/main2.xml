@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_calendar_text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Spinner
-        android:id="@+id/calendarSpinner"
+    <fragment
+        android:id="@+id/calendarsFragment"
+        android:name="appInterface.MainActivity$CalendarsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -21,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" >
-
     </TextView>
 
     <Button
@@ -30,10 +25,10 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_button_text" />
 
-    <ListView
-        android:id="@+id/eventsListView"
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="appInterface.MainActivity$EventsFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

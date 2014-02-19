@@ -11,10 +11,9 @@ public abstract class ContentItemsFactory implements IContentItemsFactory {
 	public ContentItemsFactory(Context context)
 	{
 		appContext = context;
-		helper = getHelper(context);
+		
 	}
 	public ContentHelper getHelper() { return helper; }
-	protected abstract ContentHelper getHelper(Context context);
 	public Context getContext() { return appContext; }
 	@Override
 	public IContentItem getNewIContentItem() {

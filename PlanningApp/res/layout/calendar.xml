@@ -7,7 +7,7 @@
 
     <TextView
         android:textColor="#000"
-        android:id="@+id/titleView"
+        android:id="@+id/calendarTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

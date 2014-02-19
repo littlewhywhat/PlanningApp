@@ -26,7 +26,7 @@ public class EventsHelper extends ContentHelper
 	private static final int PROJECTION_DTSTART_INDEX = 2;
 	private static final int PROJECTION_DTEND_INDEX = 3;
 	private final String selection = "((" + CalendarContract.Events.DTSTART + " >= ?) AND (" 
-            + CalendarContract.Events.DTEND + " <= ?)) ";
+            + CalendarContract.Events.DTEND + " <= ?) ";
 	public EventsHelper(Context context, String calendarId)
 	{
 		super(context);
@@ -58,7 +58,8 @@ public class EventsHelper extends ContentHelper
 	}
 	@Override
 	protected String getSelection() {
-		return selection;
+		return selection + " AND (" 
+	            + CalendarContract.Events.CALENDAR_ID + " = '"+ CalendarId +"')) ";
 	}
 
 	public void FillIEventsDic(IContentItemsDictionary eventsDic, DateInterval interval)
