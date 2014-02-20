@@ -1,13 +1,13 @@
 package contentItemsLibTest;
 
 
+import CalendarContentHelper.*;
 import contentItemsLib.*;
 
 import android.test.AndroidTestCase;
 import android.text.format.Time;
 import android.util.Log;
 
-import CalendarContentHelper.*;
 import junit.framework.Assert;
 
 public class ContentItemsLibText extends AndroidTestCase 

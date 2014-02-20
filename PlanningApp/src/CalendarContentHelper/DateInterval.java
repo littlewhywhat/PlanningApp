@@ -11,6 +11,7 @@ public class DateInterval
 	private void setDTSTART(Time time) { DTSTART = time; }
 	public Time getDTEND() { return DTEND; }
 	private void setDTEND(Time time) { DTEND = time; }
+	
 	public DateInterval(Time time)
 	{		
 		setDTSTART(TrimHMS(time));		

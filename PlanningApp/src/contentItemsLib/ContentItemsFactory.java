@@ -1,9 +1,9 @@
 package contentItemsLib;
 
-import android.content.Context;
 import CalendarContentHelper.ContentHelper;
 import CalendarContentHelper.IContentItemsFactory;
 import CalendarContentHelper.IContentItem.IContentItem;
+import android.content.Context;
 
 public abstract class ContentItemsFactory implements IContentItemsFactory {
 	ContentHelper helper;

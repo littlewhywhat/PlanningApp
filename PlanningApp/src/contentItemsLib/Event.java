@@ -2,11 +2,11 @@ package contentItemsLib;
 
 
 
-import android.text.format.Time;
-
 import CalendarContentHelper.ContentHelper;
 import CalendarContentHelper.EventsHelper;
 import CalendarContentHelper.IContentItem.IEvent;
+import android.text.format.Time;
+
 
 public class Event extends ContentItem implements IEvent {
 	public Event(ContentItemsFactory factory) {

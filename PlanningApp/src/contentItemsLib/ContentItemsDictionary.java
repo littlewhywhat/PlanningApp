@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import CalendarContentHelper.*;
 import CalendarContentHelper.IContentItem.IContentItem;
 
+
 public abstract class ContentItemsDictionary implements IContentItemsDictionary
 {
 	protected ContentItemsFactory Factory;

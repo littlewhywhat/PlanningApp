@@ -1,11 +1,11 @@
 package contentItemsLib;
 
 
+import CalendarContentHelper.DateInterval;
+import CalendarContentHelper.IContentItemsFactory;
 import android.content.Context;
 
 
-import CalendarContentHelper.DateInterval;
-import CalendarContentHelper.IContentItemsFactory;
 
 public class EventsDictionary extends ContentItemsDictionary {
 	public EventsDictionary(Context context, String calendarId) {

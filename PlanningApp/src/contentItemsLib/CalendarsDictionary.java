@@ -1,7 +1,7 @@
 package contentItemsLib;
 
-import android.content.Context;
 import CalendarContentHelper.*;
+import android.content.Context;
 
 public class CalendarsDictionary extends ContentItemsDictionary {
 
