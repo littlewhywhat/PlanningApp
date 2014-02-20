@@ -2,6 +2,11 @@ package appInterface;
 
 
 import com.littlewhywhat.planningapp.R;
+
+import fragments.DatePickerFragment;
+import fragments.EventsFragment;
+import fragments.CalendarsFragment.CalendarChooseListener;
+import fragments.DatePickerFragment.DatePickerListener;
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -9,8 +14,6 @@ import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
-import appInterface.CalendarsFragment.CalendarChooseListener;
-import appInterface.DatePickerFragment.DatePickerListener;
 
 public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener
 {
@@ -25,7 +28,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	{
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "Created");
-		this.setContentView(R.layout.main2);
+		this.setContentView(R.layout.main);
 		setDefaultDate();
 		setChooseDateButton();
 	}

@@ -1,9 +1,10 @@
-package appInterface;
+package fragments;
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.widget.*;
+import appInterface.TimeHelper;
 
 public class DatePickerFragment extends DialogFragment implements
 DatePickerDialog.OnDateSetListener {

@@ -1,4 +1,4 @@
-package appInterface;
+package fragments;
 import CalendarContentHelper.DateInterval;
 
 import com.littlewhywhat.planningapp.R;
@@ -11,6 +11,9 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import appInterface.EventsCursorAdapter;
+import appInterface.EventsLoader;
+import appInterface.TimeHelper;
 
 public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 		

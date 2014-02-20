@@ -1,4 +1,4 @@
-package appInterface;
+package fragments;
 import android.app.*;
 import android.content.Loader;
 import android.database.Cursor;
@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
+import appInterface.CalendarsCursorAdapter;
+import appInterface.CalendarsLoader;
+
 import com.littlewhywhat.planningapp.R;
 
 public class CalendarsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
