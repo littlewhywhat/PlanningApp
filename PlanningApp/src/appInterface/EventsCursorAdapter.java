@@ -2,6 +2,8 @@ package appInterface;
 
 import com.littlewhywhat.planningapp.R;
 
+import contentItemsLib.Event;
+
 
 import CalendarContentHelper.EventsHelper;
 import android.content.ClipData;
@@ -47,7 +49,7 @@ public class EventsCursorAdapter extends SimpleCursorAdapter {
 
 				
 				ClipData.Item item = new ClipData.Item(title);
-				ClipData data = new ClipData(title, new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
+				ClipData data = new ClipData(Event.class.getName(), new String[] {Event.class.getName()}, item);
 				View.DragShadowBuilder builder = new View.DragShadowBuilder(v);
 				v.startDrag(data, builder, null, 0);
 				return true;

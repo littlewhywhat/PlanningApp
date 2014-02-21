@@ -1,6 +1,8 @@
 package appInterface;
 
+import contentItemsLib.Event;
 import android.util.Log;
+
 import android.view.DragEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
@@ -15,7 +17,8 @@ public class OnEventDragListener implements OnDragListener {
         final int action = event.getAction();
         switch(action) {
             case DragEvent.ACTION_DRAG_STARTED:
-                if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+            	String eventLabel = event.getClipDescription().getLabel().toString();
+                if (eventLabel.equals(Event.class.getName())) {
                 	
                     v.setBackgroundColor(Color.BLUE);
                     v.invalidate();
