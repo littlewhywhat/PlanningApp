@@ -1,25 +1,18 @@
 package contentItemsLib;
+import android.content.Context;
 import CalendarContentHelper.*;
 import CalendarContentHelper.IContentItem.*;
 
 
 public class Calendar extends ContentItem implements ICalendar
 {
-	public Calendar(CalendarsFactory factory) {
-		super(factory);
+	public Calendar(Context context) {
+		super(context);
 	}
-
-	private String Name;
-
-	@Override
-	public String getName() { return Name; }
-
-	@Override
-	public void setName(String name) { Name = name; }
-
+	
 	@Override
 	protected ContentHelper getHelper() {
-		return new CalendarsHelper(getFactory().getContext());
+		return new CalendarsHelper(getContext());
 	}
 	
 }

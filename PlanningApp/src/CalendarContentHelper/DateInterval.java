@@ -8,6 +8,9 @@ public class DateInterval
 	private Time DTEND;
 	
 	public Time getDTSTART() { return DTSTART; }
+	public String getDTSTARTString() { return String.valueOf(getDTSTART().toMillis(true)); }
+	public String getDTENDString() { return String.valueOf(getDTEND().toMillis(true)); }
+
 	private void setDTSTART(Time time) { DTSTART = time; }
 	public Time getDTEND() { return DTEND; }
 	private void setDTEND(Time time) { DTEND = time; }
@@ -37,9 +40,4 @@ public class DateInterval
 		return newTime;
 	}
 	
-	public String[] ConvertToStringArgs()
-	{
-		return new String[] { String.valueOf(getDTSTART().toMillis(true)), 
-	  		      String.valueOf(getDTEND().toMillis(true))};
-	}
 }

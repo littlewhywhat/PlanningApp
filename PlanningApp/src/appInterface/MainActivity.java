@@ -22,6 +22,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	private final String DATE_KEY = "Date";
 	private Time time;
 	private String calendarId;
+	private OnEventDragListener dragListener = new OnEventDragListener();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -31,7 +32,16 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		this.setContentView(R.layout.main);
 		setDefaultDate();
 		setChooseDateButton();
+		setDragListener();
 	}
+	private void setDragListener() {
+		getDragView().setOnDragListener(dragListener);
+		
+	}
+	private TextView getDragView()	{
+		return (TextView)findViewById(R.id.dragView);
+	}
+	
 	@Override
 	public void onCalendarChoose(String CalendarId) {		
 		calendarId = CalendarId;

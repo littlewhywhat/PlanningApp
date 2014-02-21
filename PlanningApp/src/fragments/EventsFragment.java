@@ -13,14 +13,14 @@ import android.view.*;
 import android.widget.*;
 import appInterface.EventsCursorAdapter;
 import appInterface.EventsLoader;
-import appInterface.TimeHelper;
 
 public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 		
 	
 	
 	private static final String CALENDAR_ID_KEY = "CALENDAR_ID";
-	private static final String TIME_KEY = "TIME";
+	private static final String DTSTART_KEY = "DTSTART";
+	private static final String DTEND_KEY = "DTEND";
 	private String TAG = "EventsFragment";
 		private EventsCursorAdapter eventsAdapter;
 		private int LOADER_ID = 0;
@@ -40,9 +40,11 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		}
 		private Bundle getBundle(Time time, String calendarId)
 		{
+			DateInterval interval = new DateInterval(time);
 			Bundle bundle = new Bundle();
 			bundle.putString(CALENDAR_ID_KEY, calendarId);
-			bundle.putLong(TIME_KEY, time.toMillis(true));
+			bundle.putString(DTSTART_KEY, interval.getDTSTARTString());
+			bundle.putString(DTEND_KEY, interval.getDTENDString());
 			return bundle;
 		}
 		
@@ -54,7 +56,8 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			Log.i(TAG, "onCreateLoader()");
-			return new EventsLoader(getActivity(), new DateInterval(TimeHelper.GetTime(args.getLong(TIME_KEY))), args.getString(CALENDAR_ID_KEY));
+			return new EventsLoader(getActivity(), args.getString(DTSTART_KEY), 
+					args.getString(DTEND_KEY) , args.getString(CALENDAR_ID_KEY));
 		}
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

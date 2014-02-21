@@ -1,6 +1,7 @@
 package CalendarContentHelper;
 
 import CalendarContentHelper.IContentItem.IContentItem;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,30 +13,16 @@ public abstract class ContentHelper
 	{
 		appContext = context;
 	}
-	private Cursor getCursorByArgs(String[] selectionArgs)
+	protected ContentResolver getResolver()
 	{
-		return getAppContext().getContentResolver()
-				.query(getContentUri(), getProjection(), getSelection(), selectionArgs , null); 
+		return appContext.getContentResolver();
 	}
-	private IContentItem fillIContentItemByCursor(Cursor cursor, IContentItem contentItem)
-	{
-		contentItem.setID(cursor.getString(getProjectionIdIndex()));
-		fillIContentItemOtherFields(cursor, contentItem);
-		return contentItem;
-	}
-	
-	protected abstract void fillIContentItemOtherFields(Cursor cursor, IContentItem contentItem);
-	protected abstract int getProjectionIdIndex();
 	protected abstract Uri getContentUri();
 	protected abstract String[] getProjection();
 	protected abstract String getSelection();
-	protected Context getAppContext() { return appContext; }
-	
-	public void FillIContentItemDic(IContentItemsDictionary dic, String[] selectionArgs)
-	{
-		Cursor cursor = getCursorByArgs(selectionArgs);
-		while (cursor.moveToNext())
-			dic.AddIContentItem(fillIContentItemByCursor(cursor, dic.GetFactory().getNewIContentItem()));
+
+	public Cursor getCursorByArgs(String[] selectionArgs) {
+		return getResolver().query(getContentUri(), getProjection(), getSelection(), selectionArgs , null); 
 	}
 	public abstract void Update(IContentItem item);
 	public abstract void Insert(IContentItem item);

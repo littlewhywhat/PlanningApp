@@ -4,6 +4,7 @@ package contentItemsLibTest;
 import CalendarContentHelper.*;
 import contentItemsLib.*;
 
+import android.database.Cursor;
 import android.test.AndroidTestCase;
 import android.text.format.Time;
 import android.util.Log;
@@ -18,8 +19,11 @@ public class ContentItemsLibText extends AndroidTestCase
 	private Event Event2;
 	private Time DTSTART;
 	private Time DTEND;
-	private EventsDictionary EventsDic;
-	private CalendarsDictionary CalendarsDic;
+	private Cursor EventsCursor;
+	private Cursor CalendarsCursor;
+	private CalendarsHelper calendarsHelper;
+	private EventsHelper eventsHelper;
+	private String CalendarId;
 	
 	private Time getDTSTART()
 	{
@@ -40,7 +44,7 @@ public class ContentItemsLibText extends AndroidTestCase
 	}
 	private Event getEmptyEvent()
 	{
-		return (Event)EventsDic.getFactory().getNewContentItem();
+		return new Event(getContext());
 	}
 	private void initEvent1()
 	{
@@ -48,6 +52,7 @@ public class ContentItemsLibText extends AndroidTestCase
 		Event1.setTitle("Event 1");
 		Event1.setDTSTART(getDTSTART().toMillis(true));
 		Event1.setDTEND(DateInterval.AdvHMS(getDTSTART()).toMillis(true));
+		Event1.setCalendarId(CalendarId);
 	}
 	private void initEvent2()
 	{
@@ -55,32 +60,32 @@ public class ContentItemsLibText extends AndroidTestCase
 		Event2.setTitle("Event 2");
 		Event2.setDTSTART(DateInterval.TrimHMS(getDTEND()).toMillis(true));
 		Event2.setDTEND(getDTEND().toMillis(true));
+		Event2.setCalendarId(CalendarId);
 	}
 
-	private void fillEventsDic()
+	private void fillEventsCursor()
 	{
-		if (EventsDic.getList().size() > 0)
-			EventsDic.getList().clear();
-		EventsDic.Fill(new DateInterval(getDTSTART(), getDTEND()));
+		DateInterval interval = new DateInterval(getDTSTART(), getDTEND());
+		EventsCursor = eventsHelper.getCursor(interval.getDTSTARTString(), 
+				interval.getDTENDString(), CalendarId);
 	}
-	private void fillCalendarsDic()
+	private void fillCalendarsCursor()
 	{
-		if (CalendarsDic.getList().size() > 0)
-			CalendarsDic.getList().clear();
-		CalendarsDic.Fill();
+		CalendarsCursor = calendarsHelper.getCursor();
 	}
 	
 	@Override
 	public void setUp()
 	{		
-		CalendarsDic = new CalendarsDictionary(getContext());
-		fillCalendarsDic();
-		EventsDic = new EventsDictionary(getContext(), CalendarsDic.getList().get(0).getID());
+		calendarsHelper = new CalendarsHelper(getContext());
+		eventsHelper = new EventsHelper(getContext());	
+		fillCalendarsCursor();
+		CalendarsCursor.moveToFirst();
+		CalendarId = CalendarsCursor.getString(CalendarsHelper.PROJECTION_ID_INDEX);
 		initEvent1();
 		initEvent2();
-		fillEventsDic();
-		EventsDicSize = EventsDic.getList().size();
-		EventsDic.getList().clear();
+		fillEventsCursor();
+		EventsDicSize = EventsCursor.getCount();
 	}
 	
 	@Override
@@ -97,8 +102,8 @@ public class ContentItemsLibText extends AndroidTestCase
 	private void testFillICalendarsDic()
 	{
 		Log.i(TAG, "FillingICalendarsDic");
-		fillCalendarsDic();
-		Assert.assertTrue(0 != CalendarsDic.getList().size());
+		fillCalendarsCursor();
+		Assert.assertTrue(0 != CalendarsCursor.getCount());
 	}
 	
 	private void testInsert() 
@@ -111,8 +116,8 @@ public class ContentItemsLibText extends AndroidTestCase
 	private void testFillIEventsDic(int size)
 	{
 		Log.i(TAG, "testFillIEventsDic");
-		fillEventsDic();
-		Assert.assertTrue(EventsDic.getList().size() == size);		
+		fillEventsCursor();
+		Assert.assertTrue(EventsCursor.getCount() == size);		
 	}
 	
 	private void testDelete()
@@ -129,15 +134,23 @@ public class ContentItemsLibText extends AndroidTestCase
 		Log.i(TAG, "testUpdateEvent");
 		Event1.setTitle(_NewTitle);
 		Event1.Update();
-		fillEventsDic();
-		Assert.assertEquals(_NewTitle, ((Event)EventsDic.findItemById(Event1.getID())).getTitle());
+		Assert.assertEquals(_NewTitle, findTitleOfItemById(Event1.getID()));
 	}
+	
+	private String findTitleOfItemById(String Id) {
+		fillEventsCursor();
+		while (EventsCursor.moveToNext())
+			if (EventsCursor.getString(EventsHelper.PROJECTION_ID_INDEX).equals(Id))
+				return EventsCursor.getString(EventsHelper.PROJECTION_TITLE_INDEX);
+		return null;
+	}
+	
 	
 	@Override
 	protected void tearDown()
 	{		
-		fillEventsDic();
-		if (EventsDic.getList().size() != EventsDicSize)
+		fillEventsCursor();
+		if (EventsCursor.getCount() != EventsDicSize)
 		{
 			if (Event1.getID() != null)
 				Event1.Delete();
