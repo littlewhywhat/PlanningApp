@@ -14,10 +14,7 @@ import android.widget.*;
 import appInterface.EventsCursorAdapter;
 import appInterface.EventsLoader;
 
-public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-		
-	
-	
+public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {	
 	private static final String CALENDAR_ID_KEY = "CALENDAR_ID";
 	private static final String DTSTART_KEY = "DTSTART";
 	private static final String DTEND_KEY = "DTEND";
@@ -34,6 +31,7 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 			Log.i(TAG, "OnActivityCreated()");
 			eventsAdapter = new EventsCursorAdapter(getActivity());
 			getListView().setAdapter(eventsAdapter);
+			
 		}
 		private ListView getListView()	{
 			return (ListView)getActivity().findViewById(R.id.eventslistView);

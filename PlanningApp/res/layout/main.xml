@@ -26,13 +26,18 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_button_text" />
 
-        <TextView
-            android:id="@+id/dragView"
+    <Button
+        android:id="@+id/insertDateButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/insert_button"/>"
+
+	<fragment
+            android:id="@+id/editEventFragment"
+            android:name="fragments.EditEventFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/drag_here"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
+            tools:layout="@layout/edit_event_fragment" />
     
     <fragment
             android:id="@+id/eventsFragment"

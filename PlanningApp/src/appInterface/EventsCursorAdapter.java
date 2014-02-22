@@ -5,19 +5,15 @@ import com.littlewhywhat.planningapp.R;
 import contentItemsLib.Event;
 
 
-import CalendarContentHelper.EventsHelper;
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract.Events;
 import android.widget.*;
-import android.text.format.Time;
 import android.view.*;
 
 
 public class EventsCursorAdapter extends SimpleCursorAdapter {
-	private static final String TIME_FORMAT = "%Y.%m.%d %H:%M:%S";
+	
 	
 	private static final String[] from = new String[] { Events.TITLE, Events.DTSTART, Events.DTEND };
 	private Context appContext;
@@ -30,28 +26,23 @@ public class EventsCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Cursor cursor = (Cursor)getItem(position);
-		final String title = cursor.getString(EventsHelper.PROJECTION_TITLE_INDEX);
-		final Time DTSTART = new Time();
-		DTSTART.set(cursor.getLong(EventsHelper.PROJECTION_DTSTART_INDEX));
-		final Time DTEND = new Time();
-		DTEND.set(cursor.getLong(EventsHelper.PROJECTION_DTEND_INDEX));	
+		final Event event = new Event(appContext, cursor);
+		
 		LayoutInflater inflater = (LayoutInflater)appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		RelativeLayout itemLayout =  (RelativeLayout)inflater.inflate(R.layout.event, null);	
 		final TextView titleView = (TextView)itemLayout.findViewById(R.id.eventTitle);
-		titleView.setText(title);
+		titleView.setText(event.getTitle());
 		final TextView startDate = (TextView)itemLayout.findViewById(R.id.eventStartTime);
-		startDate.setText(DTSTART.format(TIME_FORMAT));
+		startDate.setText(event.getDTSTARTinString());
 		final TextView endDate = (TextView)itemLayout.findViewById(R.id.eventEndTime);
-		endDate.setText(DTEND.format(TIME_FORMAT));		
+		endDate.setText(event.getDTENDinString());
+		
 		itemLayout.setOnLongClickListener(new View.OnLongClickListener() {			
 			@Override
 			public boolean onLongClick(View v) {
-
 				
-				ClipData.Item item = new ClipData.Item(title);
-				ClipData data = new ClipData(Event.class.getName(), new String[] {Event.class.getName()}, item);
 				View.DragShadowBuilder builder = new View.DragShadowBuilder(v);
-				v.startDrag(data, builder, null, 0);
+				v.startDrag(event.getClipData(), builder, null, 0);
 				return true;
 			}
 		});

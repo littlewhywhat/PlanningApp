@@ -6,11 +6,14 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
-import android.widget.TextView;
 import android.content.*;
 import android.graphics.*;
 
 public class OnEventDragListener implements OnDragListener {
+	
+	public interface EventProcessor {
+		public void processEvent(Event event);
+	}
 	
 	@Override
 	public boolean onDrag(View v, DragEvent event) {
@@ -40,9 +43,12 @@ public class OnEventDragListener implements OnDragListener {
                 return(true);
             	}
             case DragEvent.ACTION_DROP: {
-            	ClipData.Item item = event.getClipData().getItemAt(0);
-            	          	
-            	((TextView)v).setText(item.getText());
+            	
+            	if (v instanceof EventProcessor) {            		
+            		ClipData data = event.getClipData();
+            		Event dataEvent =  new Event(v.getContext(), data);
+            		((EventProcessor)v).processEvent(dataEvent);
+            	}
             	v.setBackgroundColor(Color.TRANSPARENT);
             	v.invalidate();
             	return(true);      

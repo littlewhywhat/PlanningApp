@@ -3,10 +3,13 @@ package appInterface;
 
 import com.littlewhywhat.planningapp.R;
 
+import contentItemsLib.Event;
+
 import fragments.DatePickerFragment;
 import fragments.EventsFragment;
 import fragments.CalendarsFragment.CalendarChooseListener;
 import fragments.DatePickerFragment.DatePickerListener;
+import CalendarContentHelper.DateInterval;
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -33,13 +36,25 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		setDefaultDate();
 		setChooseDateButton();
 		setDragListener();
+		getInsertButton().setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Event event = new Event(v.getContext(), calendarId, time);
+				event.Insert();
+				
+			}			
+		});
+	}
+	
+	private Button getInsertButton() {
+		return (Button) findViewById(R.id.insertDateButton);
 	}
 	private void setDragListener() {
 		getDragView().setOnDragListener(dragListener);
 		
 	}
-	private TextView getDragView()	{
-		return (TextView)findViewById(R.id.dragView);
+	private View getDragView()	{
+		return findViewById(R.id.editEventFragment);
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ public class EventsHelper extends ContentHelper
 		Events.TITLE,                  // 1
 		Events.DTSTART,         		// 2
 		Events.DTEND,                  // 3
-		Events.CALENDAR_ID			   // 4
+		Events.CALENDAR_ID,		   // 4
 	};
 	public static final int PROJECTION_ID_INDEX = 0;
 	public static final int PROJECTION_TITLE_INDEX = 1;
@@ -24,7 +24,8 @@ public class EventsHelper extends ContentHelper
 	public static final int PROJECTION_DTEND_INDEX = 3;
 	public static final int PROJECTION_CALENDARID_INDEX = 4;
 	public static final String selection = "((" + Events.DTSTART + " >= ?) AND (" 
-            + Events.DTEND + " <= ?)AND (" 
+            + Events.DTEND + " <= ?) AND (" 
+            + Events.DELETED + " != '1') AND (" 
             + Events.CALENDAR_ID + " <= ?)) ";
 
 	public EventsHelper(Context context)
