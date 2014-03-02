@@ -30,7 +30,7 @@
         android:id="@+id/insertDateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/insert_button"/>"
+        android:text="@string/insert_button"/>
 
 	<fragment
             android:id="@+id/editEventFragment"

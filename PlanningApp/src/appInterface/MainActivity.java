@@ -9,7 +9,6 @@ import fragments.DatePickerFragment;
 import fragments.EventsFragment;
 import fragments.CalendarsFragment.CalendarChooseListener;
 import fragments.DatePickerFragment.DatePickerListener;
-import CalendarContentHelper.DateInterval;
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;
