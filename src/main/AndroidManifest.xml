@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.littlewhywhat.planningapp"
+    package="com.littlewhywhat.planning.android"
     android:versionCode="1"
     android:versionName="1.0" >
 	<uses-permission android:name="android.permission.READ_CALENDAR" />
 	<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 	<instrumentation android:name="android.test.InstrumentationTestRunner"
-    	android:targetPackage="com.littlewhywhat.planningapp"
-    	android:label="CalendarHelperTest" />
+    	android:targetPackage="com.littlewhywhat.planning.android.data"
+    	android:label="DataTest" />
 	
     <uses-sdk
         android:minSdkVersion="16"
