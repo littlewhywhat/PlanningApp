@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/calendarsFragment"
-        android:name="fragments.CalendarsFragment"
+        android:name="com.littlewhywhat.planning.android.ui.fragments.CalendarsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/calendars_fragment" />
@@ -34,14 +34,14 @@
 
 	<fragment
             android:id="@+id/editEventFragment"
-            android:name="fragments.EditEventFragment"
+            android:name="com.littlewhywhat.planning.android.ui.fragments.EditEventFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/edit_event_fragment" />
     
     <fragment
             android:id="@+id/eventsFragment"
-            android:name="fragments.EventsFragment"
+            android:name="com.littlewhywhat.planning.android.ui.fragments.EventsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/events_fragment" />
