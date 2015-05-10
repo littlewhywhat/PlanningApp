@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.test.AndroidTestCase;
 import android.text.format.Time;
 import android.util.Log;
+import android.provider.CalendarContract;
 
 import junit.framework.Assert;
 
@@ -17,7 +18,6 @@ public class DataTest extends AndroidTestCase
 	private Time DTEND;
 	private Cursor EventsCursor;
 	private Cursor CalendarsCursor;
-	private CalendarsHelper calendarsHelper;
 	private EventsHelper eventsHelper;
 	private String CalendarId;
 	
@@ -65,15 +65,13 @@ public class DataTest extends AndroidTestCase
 		EventsCursor = eventsHelper.getCursor(interval.getDTSTARTString(), 
 				interval.getDTENDString(), CalendarId);
 	}
-	private void fillCalendarsCursor()
-	{
-		CalendarsCursor = calendarsHelper.getCursor();
+	private void fillCalendarsCursor() {
+		CalendarsCursor = getContext().getContentResolver().query(CalendarContract.Calendars.CONTENT_URI, CalendarsHelper.CALENDAR_PROJECTION, CalendarsHelper.selection, CalendarsHelper.SelectionArgs,null);
 	}
 	
 	@Override
 	public void setUp()
 	{		
-		calendarsHelper = new CalendarsHelper(getContext());
 		eventsHelper = new EventsHelper(getContext());	
 		fillCalendarsCursor();
 		CalendarsCursor.moveToFirst();
