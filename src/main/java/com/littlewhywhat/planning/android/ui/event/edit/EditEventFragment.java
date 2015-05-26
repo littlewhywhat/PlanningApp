@@ -14,13 +14,13 @@ public class EditEventFragment extends Fragment  {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)	{
 		super.onActivityCreated(savedInstanceState);	
-		getEditDtStartSeekBar().setOnSeekBarChangeListener(getEditEventViewGroup());
-		getEditDtEndSeekBar().setOnSeekBarChangeListener(getEditEventViewGroup());
-		getEditEventViewGroup().setViewWithoutEvent();	
+		getEditDtStartSeekBar().setOnSeekBarChangeListener(getEditEventLayout());
+		getEditDtEndSeekBar().setOnSeekBarChangeListener(getEditEventLayout());
+		getEditEventLayout().setViewWithoutEvent();	
 	}
 	
-	private EditEventViewGroup getEditEventViewGroup() {
-		return (EditEventViewGroup) getActivity().findViewById(R.id.editEventFragment);
+	private EditEventLayout getEditEventLayout() {
+		return (EditEventLayout) getActivity().findViewById(R.id.editEventFragment);
 	}
 	private SeekBar getEditDtStartSeekBar() { 
 		return (SeekBar) getActivity().findViewById(R.id.editDtStartSeekBar);

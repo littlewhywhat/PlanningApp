@@ -10,18 +10,18 @@ import android.view.View;
 import android.widget.*;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.EventProcessor;
 
-public class EditEventViewGroup extends RelativeLayout implements
+public class EditEventLayout extends RelativeLayout implements
 		EventProcessor, SeekBar.OnSeekBarChangeListener {
 
 	private Event mEvent;
-	public EditEventViewGroup(Context context) {
+	public EditEventLayout(Context context) {
 		super(context);
 	}
-	public EditEventViewGroup(Context context, AttributeSet attrs) {
+	public EditEventLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
-	public EditEventViewGroup(Context context, AttributeSet attrs, int defStyle) {
+	public EditEventLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 	}
 	@Override
@@ -103,11 +103,11 @@ public class EditEventViewGroup extends RelativeLayout implements
 		int id = seekbar.getId();
 		switch (id) {
 			case(R.id.editDtStartSeekBar) :
-			Log.i(EditEventViewGroup.class.getName(), "Start");
+			Log.i(EditEventLayout.class.getName(), "Start");
 			mEvent.setDTSTARTinMinutes(progress);
 			break;
 			case(R.id.editDtEndSeekBar) :
-			Log.i(EditEventViewGroup.class.getName(), "End");
+			Log.i(EditEventLayout.class.getName(), "End");
 			mEvent.setDTENDinMinutes(progress);
 			break;
 		}
