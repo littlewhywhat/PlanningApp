@@ -28,7 +28,7 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.events_fragment, container, false);
+		return inflater.inflate(R.layout.events_layout, container, false);
 	}
 
 	@Override

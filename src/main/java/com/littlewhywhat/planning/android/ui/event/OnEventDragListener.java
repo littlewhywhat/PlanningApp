@@ -1,6 +1,7 @@
 package com.littlewhywhat.planning.android.ui.event;
 
 import com.littlewhywhat.planning.android.data.event.Event;
+import com.littlewhywhat.planning.android.ui.event.EventProcessor;
 import android.util.Log;
 
 import android.view.DragEvent;
@@ -10,11 +11,7 @@ import android.content.*;
 import android.graphics.*;
 
 public class OnEventDragListener implements OnDragListener {
-	
-	public interface EventProcessor {
-		public void processEvent(Event event);
-	}
-	
+
 	@Override
 	public boolean onDrag(View v, DragEvent event) {
         final int action = event.getAction();

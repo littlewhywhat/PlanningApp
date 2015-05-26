@@ -10,7 +10,7 @@
         android:name="com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/calendars_fragment" />
+        tools:layout="@layout/calendars_layout" />
 
     <TextView
         android:id="@+id/timeView"
@@ -37,13 +37,13 @@
             android:name="com.littlewhywhat.planning.android.ui.event.edit.EditEventFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/edit_event_fragment" />
+            tools:layout="@layout/edit_event_layout" />
     
     <fragment
             android:id="@+id/eventsFragment"
             android:name="com.littlewhywhat.planning.android.ui.event.view.EventsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/events_fragment" />
+            tools:layout="@layout/events_layout" />
 
 </LinearLayout>

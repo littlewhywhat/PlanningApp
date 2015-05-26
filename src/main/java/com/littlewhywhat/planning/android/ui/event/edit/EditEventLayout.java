@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.EventProcessor;
+import com.littlewhywhat.planning.android.ui.event.EventProcessor;
 
 public class EditEventLayout extends RelativeLayout implements
 		EventProcessor, SeekBar.OnSeekBarChangeListener {

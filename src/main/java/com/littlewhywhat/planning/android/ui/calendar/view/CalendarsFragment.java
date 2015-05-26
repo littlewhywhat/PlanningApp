@@ -35,7 +35,7 @@ public class CalendarsFragment extends Fragment implements LoaderManager.LoaderC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.i(TAG, "OnCreateView()");
-		return inflater.inflate(R.layout.calendars_fragment, container, false);
+		return inflater.inflate(R.layout.calendars_layout, container, false);
 	}
 	
 	@Override
