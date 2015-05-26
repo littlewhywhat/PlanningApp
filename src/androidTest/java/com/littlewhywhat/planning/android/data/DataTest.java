@@ -1,5 +1,6 @@
-package com.littlewhywhat.planning.android.data;
+package com.littlewhywhat.planning.android.data.event;
 
+import com.littlewhywhat.planning.android.util.DateInterval;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 import android.text.format.Time;
@@ -21,6 +22,15 @@ public class DataTest extends AndroidTestCase
 	private EventsHelper eventsHelper;
 	private String CalendarId;
 	
+	private static final String selection = "((" + CalendarContract.Calendars.VISIBLE + " = ?) AND (" 
+            + CalendarContract.Calendars.SYNC_EVENTS + " = ?)) ";
+	private static final String[] SelectionArgs = new String[] { "1" , "1" };
+	private static final String[] CALENDAR_PROJECTION = new String[] {
+		CalendarContract.Calendars._ID,                      // 0
+		CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,    // 1
+	};
+	private static final int PROJECTION_ID_INDEX = 0;
+
 	private Time getDTSTART()
 	{
 		
@@ -66,7 +76,7 @@ public class DataTest extends AndroidTestCase
 				interval.getDTENDString(), CalendarId);
 	}
 	private void fillCalendarsCursor() {
-		CalendarsCursor = getContext().getContentResolver().query(CalendarContract.Calendars.CONTENT_URI, CalendarsHelper.CALENDAR_PROJECTION, CalendarsHelper.selection, CalendarsHelper.SelectionArgs,null);
+		CalendarsCursor = getContext().getContentResolver().query(CalendarContract.Calendars.CONTENT_URI, CALENDAR_PROJECTION, selection, SelectionArgs,null);
 	}
 	
 	@Override
@@ -75,7 +85,7 @@ public class DataTest extends AndroidTestCase
 		eventsHelper = new EventsHelper(getContext());	
 		fillCalendarsCursor();
 		CalendarsCursor.moveToFirst();
-		CalendarId = CalendarsCursor.getString(CalendarsHelper.PROJECTION_ID_INDEX);
+		CalendarId = CalendarsCursor.getString(PROJECTION_ID_INDEX);
 		initEvent1();
 		initEvent2();
 		fillEventsCursor();
