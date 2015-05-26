@@ -1,7 +1,7 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.ui.adapters;
 
 import com.littlewhywhat.planning.android.R;
-import com.littlewhywhat.planning.android.data.Event;
+import com.littlewhywhat.planning.android.data.event.Event;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -2,7 +2,7 @@ package com.littlewhywhat.planning.android.ui;
 
 import com.littlewhywhat.planning.android.R;
 
-import com.littlewhywhat.planning.android.data.Event;
+import com.littlewhywhat.planning.android.data.event.Event;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;

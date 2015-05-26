@@ -1,8 +1,8 @@
-package com.littlewhywhat.planning.android.data;
+package com.littlewhywhat.planning.android.data.calendar;
 
 import android.provider.CalendarContract;
 
-public class CalendarsHelper {
+class CalendarsHelper {
 	public static final String selection = "((" + CalendarContract.Calendars.VISIBLE + " = ?) AND (" 
             + CalendarContract.Calendars.SYNC_EVENTS + " = ?)) ";
 	public static final String[] SelectionArgs = new String[] { "1" , "1" };

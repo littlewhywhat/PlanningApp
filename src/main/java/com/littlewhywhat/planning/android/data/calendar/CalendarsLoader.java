@@ -1,6 +1,5 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.data.calendar;
 
-import com.littlewhywhat.planning.android.data.CalendarsHelper;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.provider.CalendarContract.Calendars;

@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.ui.adapters;
 
 import com.littlewhywhat.planning.android.R;
 

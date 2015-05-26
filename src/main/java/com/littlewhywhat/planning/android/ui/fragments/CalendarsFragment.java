@@ -8,8 +8,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.littlewhywhat.planning.android.ui.CalendarsCursorAdapter;
-import com.littlewhywhat.planning.android.ui.CalendarsLoader;
+import com.littlewhywhat.planning.android.ui.adapters.CalendarsCursorAdapter;
+import com.littlewhywhat.planning.android.data.calendar.CalendarsLoader;
 
 import com.littlewhywhat.planning.android.R;
 

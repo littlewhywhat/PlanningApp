@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.data;
+package com.littlewhywhat.planning.android.data.event;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 
-public class EventsHelper {
+class EventsHelper {
 	private static final String TAG = "EventsHelper";
 
 	public static final String[] EVENT_PROJECTION = new String[] {
