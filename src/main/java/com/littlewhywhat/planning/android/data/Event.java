@@ -128,7 +128,7 @@ public class Event extends ContentItem implements IEvent {
 	}
 
 	@Override
-	protected ContentHelper getHelper() {
+	protected EventsHelper getHelper() {
 		return new EventsHelper(getContext()) ;
 	}
 	public void setDTENDinMinutes(int progress) {

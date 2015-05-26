@@ -11,7 +11,7 @@ public abstract class ContentItem implements IContentItem {
 	public ContentItem(Context context)	{
 		appContext = context;
 	}
-	protected abstract ContentHelper getHelper();
+	protected abstract EventsHelper getHelper();
 	@Override
 	public String getID() {
 		return ID;
