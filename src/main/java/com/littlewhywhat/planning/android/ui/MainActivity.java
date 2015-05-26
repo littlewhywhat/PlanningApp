@@ -4,10 +4,12 @@ import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
 
-import com.littlewhywhat.planning.android.ui.fragments.DatePickerFragment;
-import com.littlewhywhat.planning.android.ui.fragments.EventsFragment;
-import com.littlewhywhat.planning.android.ui.fragments.CalendarsFragment.CalendarChooseListener;
-import com.littlewhywhat.planning.android.ui.fragments.DatePickerFragment.DatePickerListener;
+import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
+import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
+
+import com.littlewhywhat.planning.android.ui.util.DatePickerFragment;
+import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.DatePickerListener;
+import com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment.CalendarChooseListener;
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;

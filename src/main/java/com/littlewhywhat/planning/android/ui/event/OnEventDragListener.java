@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.ui.event;
 
 import com.littlewhywhat.planning.android.data.event.Event;
 import android.util.Log;

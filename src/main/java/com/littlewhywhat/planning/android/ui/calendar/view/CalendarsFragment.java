@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui.fragments;
+package com.littlewhywhat.planning.android.ui.calendar.view;
 
 import android.app.*;
 import android.content.Loader;
@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.littlewhywhat.planning.android.ui.adapters.CalendarsCursorAdapter;
 import com.littlewhywhat.planning.android.data.calendar.CalendarsLoader;
 
 import com.littlewhywhat.planning.android.R;

@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui.fragments;
+package com.littlewhywhat.planning.android.ui.util;
 
 import com.littlewhywhat.planning.android.util.TimeHelper;
 

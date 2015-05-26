@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui.adapters;
+package com.littlewhywhat.planning.android.ui.event.view;
 
 import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.data.event.Event;
@@ -10,7 +10,7 @@ import android.widget.*;
 import android.view.*;
 
 
-public class EventsCursorAdapter extends SimpleCursorAdapter {
+class EventsCursorAdapter extends SimpleCursorAdapter {
 	
 	
 	private static final String[] from = new String[] { Events.TITLE, Events.DTSTART, Events.DTEND };

@@ -1,7 +1,6 @@
-package com.littlewhywhat.planning.android.ui.fragments;
+package com.littlewhywhat.planning.android.ui.event.edit;
 
 import com.littlewhywhat.planning.android.R;
-import com.littlewhywhat.planning.android.ui.EditEventViewGroup;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.*;

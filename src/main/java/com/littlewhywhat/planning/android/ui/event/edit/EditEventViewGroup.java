@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.ui.event.edit;
 
 import com.littlewhywhat.planning.android.R;
 
@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.littlewhywhat.planning.android.ui.OnEventDragListener.EventProcessor;
+import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.EventProcessor;
 
 public class EditEventViewGroup extends RelativeLayout implements
 		EventProcessor, SeekBar.OnSeekBarChangeListener {
