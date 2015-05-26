@@ -1,5 +1,7 @@
 package com.littlewhywhat.planning.android.data;
 
+import com.littlewhywhat.planning.android.util.DateInterval;
+
 import java.util.TimeZone;
 
 import android.content.ClipData;
@@ -7,7 +9,6 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.format.Time;
-
 
 public class Event {
 	private static final String TIME_FORMAT = "%Y.%m.%d %H:%M:%S";

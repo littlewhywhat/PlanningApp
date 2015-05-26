@@ -1,4 +1,4 @@
-package com.littlewhywhat.planning.android.ui;
+package com.littlewhywhat.planning.android.util;
 
 import android.text.format.Time;
 

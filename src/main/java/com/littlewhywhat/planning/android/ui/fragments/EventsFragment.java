@@ -1,7 +1,7 @@
 package com.littlewhywhat.planning.android.ui.fragments;
 
 import com.littlewhywhat.planning.android.R;
-import com.littlewhywhat.planning.android.data.DateInterval;
+import com.littlewhywhat.planning.android.util.DateInterval;
 import com.littlewhywhat.planning.android.ui.EventsCursorAdapter;
 import com.littlewhywhat.planning.android.ui.EventsLoader;
 

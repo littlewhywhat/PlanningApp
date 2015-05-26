@@ -1,10 +1,12 @@
 package com.littlewhywhat.planning.android.ui.fragments;
+
+import com.littlewhywhat.planning.android.util.TimeHelper;
+
 import android.app.*;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.widget.*;
-import com.littlewhywhat.planning.android.ui.TimeHelper;
 
 public class DatePickerFragment extends DialogFragment implements
 DatePickerDialog.OnDateSetListener {
