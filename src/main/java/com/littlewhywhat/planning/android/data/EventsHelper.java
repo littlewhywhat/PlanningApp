@@ -60,7 +60,7 @@ public class EventsHelper {
 		return getCursorByArgs(new String[] { DTSTART, DTEND, calendarId });
 	}
 	
-	private ContentValues getContentValuesForEvent(IEvent event) {
+	private ContentValues getContentValuesForEvent(Event event) {
 		ContentValues values = new ContentValues();		
 		values.put(Events.CALENDAR_ID, event.getCalendarId());
 		values.put(Events.EVENT_TIMEZONE, event.getTimeZone());
@@ -70,20 +70,17 @@ public class EventsHelper {
 		return values;
 	}
 
-	public void Update(IContentItem item) {
-		IEvent event = (IEvent)item;
+	public void Update(Event event) {
 		getResolver().update(ContentUris.withAppendedId(getContentUri(), 
 				Long.parseLong(event.getID())), getContentValuesForEvent(event), null, null);
 	}
 
-	public void Delete(IContentItem item) {
-		IEvent event = (IEvent)item;
+	public void Delete(Event event) {
 		if (0 != getResolver().delete(ContentUris.withAppendedId(getContentUri(), Long.parseLong(event.getID())), null, null))
 			event.setID(null);		
 	}
 
-	public void Insert(IContentItem item) {
-		IEvent event = (IEvent)item;
+	public void Insert(Event event) {
 		event.setID(getResolver().insert(getContentUri(), getContentValuesForEvent(event)).getLastPathSegment());			
 	}
 }

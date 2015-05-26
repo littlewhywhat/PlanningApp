@@ -9,11 +9,16 @@ import android.database.Cursor;
 import android.text.format.Time;
 
 
-public class Event extends ContentItem implements IEvent {
+public class Event {
 	private static final String TIME_FORMAT = "%Y.%m.%d %H:%M:%S";
 	private static final long MILLISINMINUTE = 60000;
+	private Context appContext;
+	private String ID;
+	protected Context getContext() {
+		return appContext;
+	}
 	public Event(Context context) {
-		super(context);
+		appContext = context;
 		
 	}
 	public Event(Context context, Cursor cursor) {
@@ -48,6 +53,14 @@ public class Event extends ContentItem implements IEvent {
 	private String Title;
 	private String mCalendarId;
 	
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String id) {
+		ID = id;
+	}
+
 	public int getDTSTARTinMinutes() {
 		
 		return (int) ((getDTSTARTinMillis() - DateInterval.TrimHMS(getDTSTART()).toMillis(true)) / MILLISINMINUTE);
@@ -102,32 +115,26 @@ public class Event extends ContentItem implements IEvent {
 		mCalendarId = calendarId;
 	}
 
-   	@Override
    	public String getTitle() {
    		return Title;
    	}
    	
-	@Override
 	public String getCalendarId() {
 		return mCalendarId;
 	}
 
-	@Override
 	public String getTimeZone() {
 		return TimeZone.getDefault().getDisplayName();
 	}
 
-	@Override
 	public Long getDTENDinMillis() {
 		return DTEND.toMillis(true);
 	}
 
-	@Override
 	public Long getDTSTARTinMillis() {
 		return DTSTART.toMillis(true);
 	}
 
-	@Override
 	protected EventsHelper getHelper() {
 		return new EventsHelper(getContext()) ;
 	}
@@ -139,4 +146,15 @@ public class Event extends ContentItem implements IEvent {
 		setDTSTART(DateInterval.TrimHMS(getDTSTART()).toMillis(true) + (long)(progress * MILLISINMINUTE));		
 	}
 
+	public void Update() {
+		getHelper().Update(this);
+	}
+	
+	public void Delete() {
+		getHelper().Delete(this);
+	}
+
+	public void Insert() {
+		getHelper().Insert(this);
+	}
 }
