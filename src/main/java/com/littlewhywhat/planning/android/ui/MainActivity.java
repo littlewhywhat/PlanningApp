@@ -7,13 +7,11 @@ import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
 
-import com.littlewhywhat.planning.android.util.TimeHelper;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.DatePickerListener;
 import com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment.CalendarChooseListener;
 import android.app.*;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -39,16 +37,10 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		getInsertButton().setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Event event = new Event(v.getContext(), calendarId, getTime());
+				Event event = new Event(v.getContext(), calendarId, calendar.getTimeInMillis());
 				event.Insert();
 			}			
 		});
-	}
-	
-	private Time getTime() {
-		return TimeHelper.GetTime(calendar.get(Calendar.YEAR), 
-								  calendar.get(Calendar.MONTH), 
-								  calendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 	private Button getInsertButton() {
@@ -82,6 +74,11 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	}
 	private void setDefaultDate() {
 	    calendar = new GregorianCalendar();
+	    calendar.clear(Calendar.HOUR_OF_DAY);
+	    calendar.clear(Calendar.HOUR);
+	    calendar.clear(Calendar.MINUTE);
+	    calendar.clear(Calendar.SECOND);
+	    calendar.clear(Calendar.MILLISECOND);
 	    setTimeViewText();
 	}
 	
@@ -118,6 +115,10 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	
 	private void refreshEvents() {
 		EventsFragment fragment = (EventsFragment)getFragmentManager().findFragmentById(R.id.eventsFragment);
-		fragment.restartLoader(getTime(), calendarId);
+		long start = calendar.getTimeInMillis();
+		calendar.roll(Calendar.DAY_OF_MONTH, true);
+		long end = calendar.getTimeInMillis();
+		calendar.roll(Calendar.DAY_OF_MONTH, false);
+		fragment.restartLoader(start, end, calendarId);
 	}
 }

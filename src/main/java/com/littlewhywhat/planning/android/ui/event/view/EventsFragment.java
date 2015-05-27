@@ -1,7 +1,6 @@
 package com.littlewhywhat.planning.android.ui.event.view;
 
 import com.littlewhywhat.planning.android.R;
-import com.littlewhywhat.planning.android.util.DateInterval;
 import com.littlewhywhat.planning.android.data.event.EventsLoader;
 
 import android.app.Fragment;
@@ -9,7 +8,6 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,18 +41,17 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		return (ListView)getActivity().findViewById(R.id.eventslistView);
 	}
 
-	private Bundle getBundle(Time time, String calendarId) {
-		DateInterval interval = new DateInterval(time);
+	private Bundle getBundle(long start, long end, String calendarId) {
 		Bundle bundle = new Bundle();
 		bundle.putString(CALENDAR_ID_KEY, calendarId);
-		bundle.putString(DTSTART_KEY, interval.getDTSTARTString());
-		bundle.putString(DTEND_KEY, interval.getDTENDString());
+		bundle.putString(DTSTART_KEY, String.valueOf(start));
+		bundle.putString(DTEND_KEY, String.valueOf(end));
 		return bundle;
 	}
 	
-	public void restartLoader(Time time, String calendarId) {
+	public void restartLoader(long start, long end, String calendarId) {
 		Log.i(TAG, "restart Loader");
-		getLoaderManager().restartLoader(LOADER_ID, getBundle(time, calendarId), this);
+		getLoaderManager().restartLoader(LOADER_ID, getBundle(start, end, calendarId), this);
 	}
 	
 	@Override

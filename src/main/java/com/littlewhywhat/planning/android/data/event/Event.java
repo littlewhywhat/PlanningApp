@@ -41,10 +41,10 @@ public class Event {
 		DTEND.parse((String)data.getItemAt(EventsHelper.PROJECTION_DTEND_INDEX).getText());
 	}
 	
-	public Event(Context context, String calendarId, Time time) {
+	public Event(Context context, String calendarId, long time) {
 		this(context);
 		setCalendarId(calendarId);
-		setDTSTART(DateInterval.TrimHMS(time).toMillis(true));
+		setDTSTART(time);
 		setDTEND(getDTSTARTinMillis() + 5 * MILLISINMINUTE);
 		setTitle("New Event");
 	}
