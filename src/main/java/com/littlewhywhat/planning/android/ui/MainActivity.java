@@ -7,6 +7,7 @@ import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
 
+import com.littlewhywhat.planning.android.util.TimeHelper;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.DatePickerListener;
 import com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment.CalendarChooseListener;
@@ -17,19 +18,18 @@ import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 
-public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener
-{
+public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener {
 	private final String TAG = "Main";
-	private final String TIME_FORMAT = "%Y.%m.%d";
 	private final String DATE_KEY = "Date";
-	private Time time;
+	private GregorianCalendar calendar;
 	private String calendarId;
 	private OnEventDragListener dragListener = new OnEventDragListener();
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "Created");
 		this.setContentView(R.layout.main);
@@ -39,16 +39,22 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		getInsertButton().setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Event event = new Event(v.getContext(), calendarId, time);
+				Event event = new Event(v.getContext(), calendarId, getTime());
 				event.Insert();
-				
 			}			
 		});
 	}
 	
+	private Time getTime() {
+		return TimeHelper.GetTime(calendar.get(Calendar.YEAR), 
+								  calendar.get(Calendar.MONTH), 
+								  calendar.get(Calendar.DAY_OF_MONTH));
+	}
+
 	private Button getInsertButton() {
 		return (Button) findViewById(R.id.insertDateButton);
 	}
+
 	private void setDragListener() {
 		getDragView().setOnDragListener(dragListener);
 		
@@ -62,37 +68,34 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		calendarId = CalendarId;
 		refreshEvents();
 	}
+
 	@Override
-	public void onDateChanged(Time Time) {
-		time = Time;
+	public void onDateChanged(long millis) {
+		calendar.setTimeInMillis(millis);
 		setTimeViewText();
 		refreshEvents();		
 	}
+
 	@Override
 	public String getDateKey() {
 		return DATE_KEY;
 	}
 	private void setDefaultDate() {
-	    time = new Time();
-	    time.setToNow();
+	    calendar = new GregorianCalendar();
 	    setTimeViewText();
 	}
-	private String getTimeText()
-	{
-		return time.format(TIME_FORMAT);
-	}
 	
-	private TextView getTimeView()	{
+	private TextView getTimeView() {
 		return (TextView)findViewById(R.id.timeView);
 	}
 	
-	private void setTimeViewText(){
-		getTimeView().setText(getTimeText());
+	private void setTimeViewText() {
+		getTimeView().setText(calendar.getTime().toString());
 	}
 	private void showDatePickerDialog() {
 		DialogFragment newFragment = new DatePickerFragment();
 		Bundle args = new Bundle();
-		args.putLong(DATE_KEY, time.toMillis(true));
+		args.putLong(DATE_KEY, calendar.getTimeInMillis());
 		newFragment.setArguments(args);
 		newFragment.show(getFragmentManager(), "datePicker");
 	}
@@ -115,6 +118,6 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	
 	private void refreshEvents() {
 		EventsFragment fragment = (EventsFragment)getFragmentManager().findFragmentById(R.id.eventsFragment);
-		fragment.restartLoader(time, calendarId);
+		fragment.restartLoader(getTime(), calendarId);
 	}
 }

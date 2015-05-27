@@ -1,12 +1,11 @@
 package com.littlewhywhat.planning.android.ui.util;
 
-import com.littlewhywhat.planning.android.util.TimeHelper;
-
 import android.app.*;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.widget.*;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements
 DatePickerDialog.OnDateSetListener {
@@ -14,7 +13,7 @@ DatePickerDialog.OnDateSetListener {
 	boolean fires = false;
 	DatePickerListener mListener;
 	public interface DatePickerListener {
-		public void onDateChanged(Time time);
+		public void onDateChanged(long millis);
 		public String getDateKey();
 	}
 	@Override
@@ -31,8 +30,12 @@ DatePickerDialog.OnDateSetListener {
 	}
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		Time time = TimeHelper.GetTime(getArguments().getLong(mListener.getDateKey()));
-		return new DatePickerDialog(getActivity(), this, time.year, time.month, time.monthDay);
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(getArguments().getLong(mListener.getDateKey()));
+		return new DatePickerDialog(getActivity(), this, 
+									calendar.get(Calendar.YEAR), 
+									calendar.get(Calendar.MONTH),
+									calendar.get(Calendar.DAY_OF_MONTH));
 	}				
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -40,7 +43,8 @@ DatePickerDialog.OnDateSetListener {
 		if (!fires) {
 			Log.i(TAG, "date selected" + year + ":" + monthOfYear + ":" + dayOfMonth );			
 			fires = true;
-			mListener.onDateChanged(TimeHelper.GetTime(year, monthOfYear, dayOfMonth));
+			GregorianCalendar calendar = new GregorianCalendar(year,monthOfYear,dayOfMonth);
+			mListener.onDateChanged(calendar.getTimeInMillis());
 		}
 		else
 			fires = false;
