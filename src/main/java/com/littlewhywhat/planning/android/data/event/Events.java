@@ -29,11 +29,11 @@ class Events {
 	}
 
 	public static ContentValues getContentValuesOf(Event event) {
-		ContentValues values = new ContentValues();		
+		final ContentValues values = new ContentValues();		
 		values.put(CalendarContract.Events.CALENDAR_ID, event.getCalendarId());
 		values.put(CalendarContract.Events.EVENT_TIMEZONE, event.getTimeZone());
-		values.put(CalendarContract.Events.DTSTART, event.getDTSTARTinMillis());
-		values.put(CalendarContract.Events.DTEND, event.getDTENDinMillis());
+		values.put(CalendarContract.Events.DTSTART, event.getDtStartinMillis());
+		values.put(CalendarContract.Events.DTEND, event.getDtEndinMillis());
 		values.put(CalendarContract.Events.TITLE, event.getTitle());
 		return values;
 	}

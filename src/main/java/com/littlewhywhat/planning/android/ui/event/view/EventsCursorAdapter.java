@@ -31,9 +31,9 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 		final TextView titleView = (TextView)itemLayout.findViewById(R.id.eventTitle);
 		titleView.setText(event.getTitle());
 		final TextView startDate = (TextView)itemLayout.findViewById(R.id.eventStartTime);
-		startDate.setText(event.getDTSTARTinString());
+		startDate.setText(event.getDtStartInString());
 		final TextView endDate = (TextView)itemLayout.findViewById(R.id.eventEndTime);
-		endDate.setText(event.getDTENDinString());
+		endDate.setText(event.getDtEndInString());
 		
 		itemLayout.setOnLongClickListener(new View.OnLongClickListener() {			
 			@Override

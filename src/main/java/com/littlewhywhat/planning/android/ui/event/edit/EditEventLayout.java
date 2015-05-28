@@ -39,8 +39,8 @@ public class EditEventLayout extends RelativeLayout implements
 				
 		refreshTextViews();
 		
-		getEditDtStartSeekBar().setProgress(event.getDTSTARTinMinutes());
-		getEditDtEndSeekBar().setProgress(event.getDTENDinMinutes());
+		getEditDtStartSeekBar().setProgress(event.getDtStartinMinutes());
+		getEditDtEndSeekBar().setProgress(event.getDtEndinMinutes());
 		
 		getUpdateButton().setOnClickListener(new OnClickListener() {
 
@@ -60,8 +60,8 @@ public class EditEventLayout extends RelativeLayout implements
 	}
 	private void refreshTextViews() {
 		getTitleView().setText(mEvent.getTitle());
-		getDtStartView().setText(mEvent.getDTSTARTinString());
-		getDtEndView().setText(mEvent.getDTENDinString());		
+		getDtStartView().setText(mEvent.getDtStartInString());
+		getDtEndView().setText(mEvent.getDtEndInString());		
 	}
 	private Button getUpdateButton() {
 		return (Button) findViewById(R.id.updateButton);
@@ -109,11 +109,11 @@ public class EditEventLayout extends RelativeLayout implements
 		switch (id) {
 			case(R.id.editDtStartSeekBar) :
 			Log.i(EditEventLayout.class.getName(), "Start");
-			mEvent.setDTSTARTinMinutes(progress);
+			mEvent.setDtStartinMinutes(progress);
 			break;
 			case(R.id.editDtEndSeekBar) :
 			Log.i(EditEventLayout.class.getName(), "End");
-			mEvent.setDTENDinMinutes(progress);
+			mEvent.setDtEndinMinutes(progress);
 			break;
 		}
 		refreshTextViews();

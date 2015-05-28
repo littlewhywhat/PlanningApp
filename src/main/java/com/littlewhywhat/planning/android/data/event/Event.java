@@ -8,137 +8,147 @@ import android.content.ClipDescription;
 import android.database.Cursor;
 
 public class Event {
-	private static final long MILLISINMINUTE = 60000;
-	private String ID;
-	private String Title;
+	private static final String DEFAULT_TITLE = "New Event";
+	private static final int MINUTES_IN_HOUR = 60;
+	private static final int DEFAULT_INTERVAL = 5;
+	private String mId;
+	private String mTitle;
 	private String mCalendarId;
-	private GregorianCalendar calendarStart;
-	private GregorianCalendar calendarEnd;
+	private Calendar mDtStart;
+	private Calendar mDtEnd;
 	
 	private Event() {
-		calendarStart = new GregorianCalendar();
-		calendarEnd = (GregorianCalendar)calendarStart.clone();
-		calendarEnd.roll(Calendar.MINUTE, 5);
+		mDtStart = new GregorianCalendar();
+		mDtEnd = (Calendar)mDtStart.clone();
+		setDtEndDefault();
 	}
+	
 	public Event(Cursor cursor) {
 		this();
-		setID(cursor.getString(Events.PROJECTION_ID_INDEX));
-		setDTSTART(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
-		setDTEND(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
+		setId(cursor.getString(Events.PROJECTION_ID_INDEX));
+		setDtStart(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
+		setDtEnd(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
 		setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
 		setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
 	}
 	
 	public Event(ClipData data) {
 		this();
-		setID((String) data.getItemAt(Events.PROJECTION_ID_INDEX).getText());
+		setId((String)data.getItemAt(Events.PROJECTION_ID_INDEX).getText());
 		setTitle((String)data.getItemAt(Events.PROJECTION_TITLE_INDEX).getText());
 		setCalendarId((String)data.getItemAt(Events.PROJECTION_CALENDARID_INDEX).getText());
-		setDTSTART((String)data.getItemAt(Events.PROJECTION_DTSTART_INDEX).getText());
-		setDTEND((String)data.getItemAt(Events.PROJECTION_DTEND_INDEX).getText());
+		setDtStart((String)data.getItemAt(Events.PROJECTION_DTSTART_INDEX).getText());
+		setDtEnd((String)data.getItemAt(Events.PROJECTION_DTEND_INDEX).getText());
 	}
 	
 	public Event(String calendarId, long time) {
 		this();
 		setCalendarId(calendarId);
-		setDTSTART(time);
-		setDTEND(getDTSTARTinMillis() + 5 * MILLISINMINUTE);
-		setTitle("New Event");
+		setDtStart(time);
+		setDtEndDefault();
+		setTitle(DEFAULT_TITLE);
 	}
 
-	public String getID() {
-		return ID;
+	public String getId() {
+		return mId;
 	}
 
-	public void setID(String id) {
-		ID = id;
-	}
-
-	public int getDTSTARTinMinutes() {
-		int hours = calendarStart.get(Calendar.HOUR_OF_DAY);
-		int minutes = calendarStart.get(Calendar.MINUTE);
-		return hours * 60 + minutes;
+	public void setId(String id) {
+		mId = id;
 	}
 	
-	public int getDTENDinMinutes() {
-		int hours = calendarEnd.get(Calendar.HOUR_OF_DAY);
-		int minutes = calendarEnd.get(Calendar.MINUTE);
-		return hours * 60 + minutes;
+	public String getDtStartInString() {
+		return mDtStart.getTime().toString();
+	}
+
+	public String getDtEndInString() {
+		return mDtEnd.getTime().toString();
+	}
+
+	public Long getDtEndinMillis() {
+		return mDtEnd.getTimeInMillis();
+	}
+
+	public Long getDtStartinMillis() {
+		return mDtStart.getTimeInMillis();
+	}
+
+	public void setDtStart(long millis) {
+		mDtStart.setTimeInMillis(millis);
+	}
+
+	public void setDtStart(String millis) {
+		mDtStart.setTimeInMillis(Long.parseLong(millis));
+	}
+
+	public void setDtEnd(long millis) {
+		mDtEnd.setTimeInMillis(millis);
+	}
+
+	public void setDtEnd(String millis) {
+		mDtEnd.setTimeInMillis(Long.parseLong(millis));
+	}
+
+	public void setDtEndDefault() {
+		setDtEnd(getDtStartinMillis());
+		mDtEnd.roll(Calendar.MINUTE, DEFAULT_INTERVAL);
+	}
+
+	public void setDtEndinMinutes(int progressInMin) {
+		mDtEnd.set(Calendar.HOUR_OF_DAY, progressInMin / MINUTES_IN_HOUR);
+		mDtEnd.set(Calendar.MINUTE, progressInMin % MINUTES_IN_HOUR);
 	}
 	
-	public String getDTSTARTinString() {
-		return calendarStart.getTime().toString();
-	}
-	public String getDTENDinString() {
-		return calendarEnd.getTime().toString();
-	}
-	public ClipData getClipData() {
-		ClipData.Item idItem = new ClipData.Item(getID());
-		ClipData data = new ClipData(Event.class.getName(), 
-				new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN},
-				idItem);
-		ClipData.Item titleItem = new ClipData.Item(getTitle());
-		ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDTSTARTinMillis()));
-		ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDTENDinMillis()));
-		ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
-		data.addItem(titleItem);
-		data.addItem(dtStartItem);
-		data.addItem(dtEndItem);
-		data.addItem(calendarIdItem);
-		return data;
+	public void setDtStartinMinutes(int progressInMin) {
+		mDtStart.set(Calendar.HOUR_OF_DAY, progressInMin / MINUTES_IN_HOUR);
+		mDtStart.set(Calendar.MINUTE, progressInMin % MINUTES_IN_HOUR);
 	}
 
-	public void setDTSTART(long millis) {
-		calendarStart.setTimeInMillis(millis);
+	public int getDtStartinMinutes() {
+		final int hours = mDtStart.get(Calendar.HOUR_OF_DAY);
+		final int minutes = mDtStart.get(Calendar.MINUTE);
+		return hours * MINUTES_IN_HOUR + minutes;
 	}
-
-	public void setDTEND(long millis) {
-		calendarEnd.setTimeInMillis(millis);
+	
+	public int getDtEndinMinutes() {
+		final int hours = mDtEnd.get(Calendar.HOUR_OF_DAY);
+		final int minutes = mDtEnd.get(Calendar.MINUTE);
+		return hours * MINUTES_IN_HOUR + minutes;
 	}
-	public void setDTSTART(String millis) {
-		calendarStart.setTimeInMillis(Long.parseLong(millis, 10));
-	}
-
-	public void setDTEND(String millis) {
-		calendarEnd.setTimeInMillis(Long.parseLong(millis, 10));
-	}
-
 
 	public void setTitle(String title) {
-		Title = title;
+		mTitle = title;
 	}
-	
+   	
+   	public String getTitle() {
+   		return mTitle;
+   	}
+
 	public void setCalendarId(String calendarId) {
 		mCalendarId = calendarId;
 	}
-
-   	public String getTitle() {
-   		return Title;
-   	}
    	
 	public String getCalendarId() {
 		return mCalendarId;
 	}
 
 	public String getTimeZone() {
-		return calendarStart.getTimeZone().getDisplayName();
+		return mDtStart.getTimeZone().getDisplayName();
 	}
 
-	public Long getDTENDinMillis() {
-		return calendarEnd.getTimeInMillis();
-	}
-
-	public Long getDTSTARTinMillis() {
-		return calendarStart.getTimeInMillis();
-	}
-
-	public void setDTENDinMinutes(int progressInMin) {
-		calendarEnd.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
-		calendarEnd.set(Calendar.MINUTE, progressInMin % 60);
-	}
-	
-	public void setDTSTARTinMinutes(int progressInMin) {
-		calendarStart.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
-		calendarStart.set(Calendar.MINUTE, progressInMin % 60);
+	public ClipData getClipData() {
+		final ClipData.Item idItem = new ClipData.Item(getId());
+		final ClipData data = new ClipData(Event.class.getName(), 
+										   new String[] { ClipDescription.MIMETYPE_TEXT_PLAIN },
+										   idItem);
+		final ClipData.Item titleItem = new ClipData.Item(getTitle());
+		final ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDtStartinMillis()));
+		final ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDtEndinMillis()));
+		final ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
+		data.addItem(titleItem);
+		data.addItem(dtStartItem);
+		data.addItem(dtEndItem);
+		data.addItem(calendarIdItem);
+		return data;
 	}
 }

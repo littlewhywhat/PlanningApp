@@ -7,27 +7,27 @@ import android.util.Log;
 public class EventsHelper {
 	private static final String TAG = "EventsHelper";
 
-	private Context appContext;
+	private Context mContext;
 
 	public EventsHelper(Context context) {
-		appContext = context;
+		mContext = context;
 		Log.i(TAG, "Created");
 	}
 
 	private ContentResolver getResolver() {
-		return appContext.getContentResolver();
+		return mContext.getContentResolver();
 	}
 
 	public void Update(Event event) {
-		getResolver().update(Events.getUriWithId(event.getID()), Events.getContentValuesOf(event), null, null);
+		getResolver().update(Events.getUriWithId(event.getId()), Events.getContentValuesOf(event), null, null);
 	}
 
 	public void Delete(Event event) {
-		if (0 != getResolver().delete(Events.getUriWithId(event.getID()), null, null))
-			event.setID(null);		
+		if (0 != getResolver().delete(Events.getUriWithId(event.getId()), null, null))
+			event.setId(null);		
 	}
 
 	public void Insert(Event event) {
-		event.setID(getResolver().insert(Events.CONTENT_URI, Events.getContentValuesOf(event)).getLastPathSegment());			
+		event.setId(getResolver().insert(Events.CONTENT_URI, Events.getContentValuesOf(event)).getLastPathSegment());			
 	}
 }
