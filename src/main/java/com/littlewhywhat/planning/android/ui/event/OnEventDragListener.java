@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
-import android.content.*;
-import android.graphics.*;
+import android.content.ClipData;
+import android.graphics.Color;
 
 public class OnEventDragListener implements OnDragListener {
 
@@ -17,48 +17,50 @@ public class OnEventDragListener implements OnDragListener {
         final int action = event.getAction();
         switch(action) {
             case DragEvent.ACTION_DRAG_STARTED:
-            	String eventLabel = event.getClipDescription().getLabel().toString();
-                if (eventLabel.equals(Event.class.getName())) {
-                	
-                    v.setBackgroundColor(Color.BLUE);
-                    v.invalidate();
-                    return(true);
-                    } 
-                else {
-                    return(false);                    
-                    }               
-            case DragEvent.ACTION_DRAG_ENTERED: {
-                v.setBackgroundColor(Color.GREEN);
-                v.invalidate();
-                return(true);
-            	}
+                final String eventLabel = event.getClipDescription().getLabel().toString();
+                if (eventLabel.equals(Event.class.getName())) {        	
+                    highlightExit(v);
+                    return true;
+                } else
+                    return false;   
+            case DragEvent.ACTION_DRAG_ENTERED:
+                highlightEnter(v);
+                return true;
             case DragEvent.ACTION_DRAG_LOCATION:
-                return(true);
-            case DragEvent.ACTION_DRAG_EXITED: {
-                v.setBackgroundColor(Color.BLUE);
-                v.invalidate();
-                return(true);
-            	}
-            case DragEvent.ACTION_DROP: {
-            	
+                return true;
+            case DragEvent.ACTION_DRAG_EXITED:
+                highlightExit(v);
+                return true;
+            case DragEvent.ACTION_DROP:                	
             	if (v instanceof EventProcessor) {            		
             		ClipData data = event.getClipData();
             		Event dataEvent =  new Event(data);
             		((EventProcessor)v).processEvent(dataEvent);
             	}
-            	v.setBackgroundColor(Color.TRANSPARENT);
-            	v.invalidate();
-            	return(true);      
-            	}
-            case DragEvent.ACTION_DRAG_ENDED: {
-            	v.setBackgroundColor(Color.TRANSPARENT);
-            	v.invalidate();
-            	return(true);
-                }
-            default: {
-                Log.e("DragDrop Example","Unknown action type received by OnDragListener.");
-                return(false);
-                }     
+            	recover(v);
+            	return true;      
+            case DragEvent.ACTION_DRAG_ENDED:
+            	recover(v);
+            	return true;
+            default:
+                return false;
         }
-	}
+    }
+
+    private void changeBackgroundColor(View v, int color) {
+        v.setBackgroundColor(color);
+        v.invalidate();
+    }
+
+    private void highlightEnter(View v) {
+        changeBackgroundColor(v, Color.GREEN);
+    }
+
+    private void highlightExit(View v) {
+        changeBackgroundColor(v, Color.BLUE);
+    }
+
+    private void recover(View v) {
+        changeBackgroundColor(v, Color.TRANSPARENT);
+    }
 }
