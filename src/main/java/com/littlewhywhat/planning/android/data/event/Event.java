@@ -23,20 +23,20 @@ public class Event {
 	}
 	public Event(Context context, Cursor cursor) {
 		this(context);
-		setID(cursor.getString(EventsHelper.PROJECTION_ID_INDEX));
-		setDTSTART(cursor.getLong(EventsHelper.PROJECTION_DTSTART_INDEX));
-		setDTEND(cursor.getLong(EventsHelper.PROJECTION_DTEND_INDEX));
-		setTitle(cursor.getString(EventsHelper.PROJECTION_TITLE_INDEX));
-		setCalendarId(cursor.getString(EventsHelper.PROJECTION_CALENDARID_INDEX));
+		setID(cursor.getString(Events.PROJECTION_ID_INDEX));
+		setDTSTART(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
+		setDTEND(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
+		setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
+		setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
 	}
 	
 	public Event(Context context, ClipData data) {
 		this(context);
-		setID((String) data.getItemAt(EventsHelper.PROJECTION_ID_INDEX).getText());
-		setTitle((String)data.getItemAt(EventsHelper.PROJECTION_TITLE_INDEX).getText());
-		setCalendarId((String)data.getItemAt(EventsHelper.PROJECTION_CALENDARID_INDEX).getText());
-		setDTSTART((String)data.getItemAt(EventsHelper.PROJECTION_DTSTART_INDEX).getText());
-		setDTEND((String)data.getItemAt(EventsHelper.PROJECTION_DTEND_INDEX).getText());
+		setID((String) data.getItemAt(Events.PROJECTION_ID_INDEX).getText());
+		setTitle((String)data.getItemAt(Events.PROJECTION_TITLE_INDEX).getText());
+		setCalendarId((String)data.getItemAt(Events.PROJECTION_CALENDARID_INDEX).getText());
+		setDTSTART((String)data.getItemAt(Events.PROJECTION_DTSTART_INDEX).getText());
+		setDTEND((String)data.getItemAt(Events.PROJECTION_DTEND_INDEX).getText());
 	}
 	
 	public Event(Context context, String calendarId, long time) {
