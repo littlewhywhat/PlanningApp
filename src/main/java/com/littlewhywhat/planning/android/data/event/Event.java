@@ -1,26 +1,25 @@
 package com.littlewhywhat.planning.android.data.event;
 
-import com.littlewhywhat.planning.android.util.DateInterval;
-
-import java.util.TimeZone;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.database.Cursor;
-import android.text.format.Time;
 
 public class Event {
-	private static final String TIME_FORMAT = "%Y.%m.%d %H:%M:%S";
 	private static final long MILLISINMINUTE = 60000;
 	private Context appContext;
 	private String ID;
 	protected Context getContext() {
 		return appContext;
 	}
-	public Event(Context context) {
+	private Event(Context context) {
 		appContext = context;
-		
+		calendarStart = new GregorianCalendar();
+		calendarEnd = (GregorianCalendar)calendarStart.clone();
+		calendarEnd.roll(Calendar.MINUTE, 5);
 	}
 	public Event(Context context, Cursor cursor) {
 		this(context);
@@ -31,14 +30,13 @@ public class Event {
 		setCalendarId(cursor.getString(EventsHelper.PROJECTION_CALENDARID_INDEX));
 	}
 	
-	public Event(Context context, ClipData data)
-	{
+	public Event(Context context, ClipData data) {
 		this(context);
 		setID((String) data.getItemAt(EventsHelper.PROJECTION_ID_INDEX).getText());
 		setTitle((String)data.getItemAt(EventsHelper.PROJECTION_TITLE_INDEX).getText());
 		setCalendarId((String)data.getItemAt(EventsHelper.PROJECTION_CALENDARID_INDEX).getText());
-		DTSTART.parse((String)data.getItemAt(EventsHelper.PROJECTION_DTSTART_INDEX).getText());
-		DTEND.parse((String)data.getItemAt(EventsHelper.PROJECTION_DTEND_INDEX).getText());
+		setDTSTART((String)data.getItemAt(EventsHelper.PROJECTION_DTSTART_INDEX).getText());
+		setDTEND((String)data.getItemAt(EventsHelper.PROJECTION_DTEND_INDEX).getText());
 	}
 	
 	public Event(Context context, String calendarId, long time) {
@@ -49,11 +47,11 @@ public class Event {
 		setTitle("New Event");
 	}
 
-	private Time DTSTART = new Time();
-	private Time DTEND = new Time();
 	private String Title;
 	private String mCalendarId;
-	
+	private GregorianCalendar calendarStart;
+	private GregorianCalendar calendarEnd;
+
 	public String getID() {
 		return ID;
 	}
@@ -63,19 +61,22 @@ public class Event {
 	}
 
 	public int getDTSTARTinMinutes() {
-		
-		return (int) ((getDTSTARTinMillis() - DateInterval.TrimHMS(getDTSTART()).toMillis(true)) / MILLISINMINUTE);
+		int hours = calendarStart.get(Calendar.HOUR_OF_DAY);
+		int minutes = calendarStart.get(Calendar.MINUTE);
+		return hours * 60 + minutes;
 	}
 	
 	public int getDTENDinMinutes() {
-		return (int) ((getDTENDinMillis() - DateInterval.TrimHMS(getDTEND()).toMillis(true)) / MILLISINMINUTE);
+		int hours = calendarEnd.get(Calendar.HOUR_OF_DAY);
+		int minutes = calendarEnd.get(Calendar.MINUTE);
+		return hours * 60 + minutes;
 	}
 	
 	public String getDTSTARTinString() {
-		return DTSTART.format(TIME_FORMAT);
+		return calendarStart.getTime().toString();
 	}
 	public String getDTENDinString() {
-		return DTEND.format(TIME_FORMAT);
+		return calendarEnd.getTime().toString();
 	}
 	public ClipData getClipData() {
 		ClipData.Item idItem = new ClipData.Item(getID());
@@ -83,8 +84,8 @@ public class Event {
 				new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN},
 				idItem);
 		ClipData.Item titleItem = new ClipData.Item(getTitle());
-		ClipData.Item dtStartItem = new ClipData.Item(getDTSTART().format2445());
-		ClipData.Item dtEndItem = new ClipData.Item(getDTEND().format2445());
+		ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDTSTARTinMillis()));
+		ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDTENDinMillis()));
 		ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
 		data.addItem(titleItem);
 		data.addItem(dtStartItem);
@@ -92,19 +93,20 @@ public class Event {
 		data.addItem(calendarIdItem);
 		return data;
 	}
-	
-	public Time getDTSTART() {
-		return DTSTART;
-	}
-	public Time getDTEND() {
-		return DTEND;
-	}
+
 	public void setDTSTART(long millis) {
-		DTSTART.set(millis);
+		calendarStart.setTimeInMillis(millis);
 	}
 
 	public void setDTEND(long millis) {
-		DTEND.set(millis);
+		calendarEnd.setTimeInMillis(millis);
+	}
+	public void setDTSTART(String millis) {
+		calendarStart.setTimeInMillis(Long.parseLong(millis, 10));
+	}
+
+	public void setDTEND(String millis) {
+		calendarEnd.setTimeInMillis(Long.parseLong(millis, 10));
 	}
 
 
@@ -125,26 +127,28 @@ public class Event {
 	}
 
 	public String getTimeZone() {
-		return TimeZone.getDefault().getDisplayName();
+		return calendarStart.getTimeZone().getDisplayName();
 	}
 
 	public Long getDTENDinMillis() {
-		return DTEND.toMillis(true);
+		return calendarEnd.getTimeInMillis();
 	}
 
 	public Long getDTSTARTinMillis() {
-		return DTSTART.toMillis(true);
+		return calendarStart.getTimeInMillis();
 	}
 
 	protected EventsHelper getHelper() {
 		return new EventsHelper(getContext()) ;
 	}
-	public void setDTENDinMinutes(int progress) {
-		setDTEND(DateInterval.TrimHMS(getDTEND()).toMillis(true) + (long)(progress * MILLISINMINUTE));		
+	public void setDTENDinMinutes(int progressInMin) {
+		calendarEnd.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
+		calendarEnd.set(Calendar.MINUTE, progressInMin % 60);
 	}
 	
-	public void setDTSTARTinMinutes(int progress) {
-		setDTSTART(DateInterval.TrimHMS(getDTSTART()).toMillis(true) + (long)(progress * MILLISINMINUTE));		
+	public void setDTSTARTinMinutes(int progressInMin) {
+		calendarStart.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
+		calendarStart.set(Calendar.MINUTE, progressInMin % 60);
 	}
 
 	public void Update() {
