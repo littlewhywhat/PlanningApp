@@ -43,7 +43,7 @@ public class OnEventDragListener implements OnDragListener {
             	
             	if (v instanceof EventProcessor) {            		
             		ClipData data = event.getClipData();
-            		Event dataEvent =  new Event(v.getContext(), data);
+            		Event dataEvent =  new Event(data);
             		((EventProcessor)v).processEvent(dataEvent);
             	}
             	v.setBackgroundColor(Color.TRANSPARENT);

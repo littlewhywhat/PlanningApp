@@ -3,6 +3,7 @@ package com.littlewhywhat.planning.android.ui.event.edit;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
+import com.littlewhywhat.planning.android.data.event.EventsHelper;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,15 +15,19 @@ public class EditEventLayout extends RelativeLayout implements
 		EventProcessor, SeekBar.OnSeekBarChangeListener {
 
 	private Event mEvent;
+	private EventsHelper mEventsHelper;
 	public EditEventLayout(Context context) {
 		super(context);
+		mEventsHelper = new EventsHelper(context);
 	}
 	public EditEventLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mEventsHelper = new EventsHelper(context);
 	}
 	
 	public EditEventLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
+		mEventsHelper = new EventsHelper(context);
 	}
 	@Override
 	public void processEvent(Event event) {
@@ -41,14 +46,14 @@ public class EditEventLayout extends RelativeLayout implements
 
 			@Override
 			public void onClick(View arg0) {
-				mEvent.Update();				
+				mEventsHelper.Update(mEvent);				
 			}			
 		});
 		getDeleteButton().setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				mEvent.Delete();	
+				mEventsHelper.Delete(mEvent);	
 				setViewWithoutEvent();
 			}			
 		});

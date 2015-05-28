@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.ContentResolver;
 import android.util.Log;
 
-class EventsHelper {
+public class EventsHelper {
 	private static final String TAG = "EventsHelper";
 
 	private Context appContext;

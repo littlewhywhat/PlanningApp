@@ -24,7 +24,7 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Cursor cursor = (Cursor)getItem(position);
-		final Event event = new Event(appContext, cursor);
+		final Event event = new Event(cursor);
 		
 		LayoutInflater inflater = (LayoutInflater)appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		RelativeLayout itemLayout =  (RelativeLayout)inflater.inflate(R.layout.event, null);	

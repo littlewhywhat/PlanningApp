@@ -5,24 +5,23 @@ import java.util.Calendar;
 
 import android.content.ClipData;
 import android.content.ClipDescription;
-import android.content.Context;
 import android.database.Cursor;
 
 public class Event {
 	private static final long MILLISINMINUTE = 60000;
-	private Context appContext;
 	private String ID;
-	protected Context getContext() {
-		return appContext;
-	}
-	private Event(Context context) {
-		appContext = context;
+	private String Title;
+	private String mCalendarId;
+	private GregorianCalendar calendarStart;
+	private GregorianCalendar calendarEnd;
+	
+	private Event() {
 		calendarStart = new GregorianCalendar();
 		calendarEnd = (GregorianCalendar)calendarStart.clone();
 		calendarEnd.roll(Calendar.MINUTE, 5);
 	}
-	public Event(Context context, Cursor cursor) {
-		this(context);
+	public Event(Cursor cursor) {
+		this();
 		setID(cursor.getString(Events.PROJECTION_ID_INDEX));
 		setDTSTART(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
 		setDTEND(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
@@ -30,8 +29,8 @@ public class Event {
 		setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
 	}
 	
-	public Event(Context context, ClipData data) {
-		this(context);
+	public Event(ClipData data) {
+		this();
 		setID((String) data.getItemAt(Events.PROJECTION_ID_INDEX).getText());
 		setTitle((String)data.getItemAt(Events.PROJECTION_TITLE_INDEX).getText());
 		setCalendarId((String)data.getItemAt(Events.PROJECTION_CALENDARID_INDEX).getText());
@@ -39,18 +38,13 @@ public class Event {
 		setDTEND((String)data.getItemAt(Events.PROJECTION_DTEND_INDEX).getText());
 	}
 	
-	public Event(Context context, String calendarId, long time) {
-		this(context);
+	public Event(String calendarId, long time) {
+		this();
 		setCalendarId(calendarId);
 		setDTSTART(time);
 		setDTEND(getDTSTARTinMillis() + 5 * MILLISINMINUTE);
 		setTitle("New Event");
 	}
-
-	private String Title;
-	private String mCalendarId;
-	private GregorianCalendar calendarStart;
-	private GregorianCalendar calendarEnd;
 
 	public String getID() {
 		return ID;
@@ -138,9 +132,6 @@ public class Event {
 		return calendarStart.getTimeInMillis();
 	}
 
-	protected EventsHelper getHelper() {
-		return new EventsHelper(getContext()) ;
-	}
 	public void setDTENDinMinutes(int progressInMin) {
 		calendarEnd.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
 		calendarEnd.set(Calendar.MINUTE, progressInMin % 60);
@@ -149,17 +140,5 @@ public class Event {
 	public void setDTSTARTinMinutes(int progressInMin) {
 		calendarStart.set(Calendar.HOUR_OF_DAY, progressInMin / 60);
 		calendarStart.set(Calendar.MINUTE, progressInMin % 60);
-	}
-
-	public void Update() {
-		getHelper().Update(this);
-	}
-	
-	public void Delete() {
-		getHelper().Delete(this);
-	}
-
-	public void Insert() {
-		getHelper().Insert(this);
 	}
 }
