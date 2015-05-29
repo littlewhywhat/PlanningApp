@@ -3,8 +3,6 @@ package com.littlewhywhat.planning.android.data.event;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -126,13 +124,5 @@ public class Event {
 
 	public String getTimeZone() {
 		return mDtStart.getTimeZone().getDisplayName();
-	}
-
-	public ClipData getClipData() {
-		final ClipData.Item idItem = new ClipData.Item(getId());
-		final ClipData data = new ClipData(Event.class.getName(), 
-										   new String[] { ClipDescription.MIMETYPE_TEXT_PLAIN },
-										   idItem);
-		return data;
 	}
 }

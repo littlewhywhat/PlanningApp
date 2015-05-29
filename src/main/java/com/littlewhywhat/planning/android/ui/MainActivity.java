@@ -51,11 +51,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	}
 
 	private void setDragListener() {
-		getDragView().setOnDragListener(dragListener);
-		
-	}
-	private View getDragView()	{
-		return findViewById(R.id.editEventFragment);
+		findViewById(R.id.editEventFragment).setOnDragListener(dragListener);
 	}
 	
 	@Override

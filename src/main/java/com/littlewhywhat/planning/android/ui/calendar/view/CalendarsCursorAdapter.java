@@ -6,11 +6,11 @@ import android.content.Context;
 import android.provider.CalendarContract.Calendars;
 import android.widget.SimpleCursorAdapter;
 
-
 class CalendarsCursorAdapter extends SimpleCursorAdapter {
 	private final static String[] from = new String[] { Calendars.CALENDAR_DISPLAY_NAME };
+	private final static int[] to = new int[] { R.id.calendarTitle };
 	public CalendarsCursorAdapter(Context context) {
-		super(context, R.layout.calendar, null, from, new int[] { R.id.calendarTitle }, 0);		
+		super(context, R.layout.calendar, null, from, to, 0);		
 	}
 
 }

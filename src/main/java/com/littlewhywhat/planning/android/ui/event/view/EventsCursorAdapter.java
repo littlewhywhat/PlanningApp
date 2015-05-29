@@ -4,11 +4,12 @@ import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.data.event.Event;
 
 import android.content.Context;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.database.Cursor;
 import android.provider.CalendarContract.Events;
 import android.widget.*;
 import android.view.*;
-
 
 class EventsCursorAdapter extends SimpleCursorAdapter {
 	
@@ -38,9 +39,13 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 		itemLayout.setOnLongClickListener(new View.OnLongClickListener() {			
 			@Override
 			public boolean onLongClick(View v) {
-				
 				View.DragShadowBuilder builder = new View.DragShadowBuilder(v);
-				v.startDrag(event.getClipData(), builder, null, 0);
+	
+				final ClipData.Item idItem = new ClipData.Item(event.getId());
+				final ClipData data = new ClipData(Event.class.getName(), new String[] {
+													ClipDescription.MIMETYPE_TEXT_PLAIN 
+													}, idItem);
+				v.startDrag(data, builder, null, 0);
 				return true;
 			}
 		});
