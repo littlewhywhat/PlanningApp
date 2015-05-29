@@ -14,7 +14,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 		public void refresh();
 	}
 
-	private static String EXCEPTION_MESSAGE = " must implement OnArticleSelectedListener";
+	private static final String EXCEPTION_MESSAGE = " must implement OnArticleSelectedListener";
 	private boolean mFires = false;
 	private DatePickerListener mListener;
 	
