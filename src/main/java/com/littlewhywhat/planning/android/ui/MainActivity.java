@@ -3,7 +3,7 @@ package com.littlewhywhat.planning.android.ui;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
-import com.littlewhywhat.planning.android.data.event.EventsHelper;
+import com.littlewhywhat.planning.android.data.event.EventsResolver;
 
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
@@ -26,14 +26,14 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	private GregorianCalendar calendar;
 	private String calendarId;
 	private OnEventDragListener dragListener = new OnEventDragListener();
-	private EventsHelper mEventsHelper;
+	private EventsResolver mEventsResolver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "Created");
 		this.setContentView(R.layout.main);
-		mEventsHelper = new EventsHelper(this);
+		mEventsResolver = new EventsResolver(getContentResolver());
 		setDefaultDate();
 		setChooseDateButton();
 		setDragListener();
@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 			@Override
 			public void onClick(View v) {
 				Event event = new Event(calendarId, calendar.getTimeInMillis());
-				mEventsHelper.Insert(event);
+				mEventsResolver.Insert(event);
 			}			
 		});
 	}

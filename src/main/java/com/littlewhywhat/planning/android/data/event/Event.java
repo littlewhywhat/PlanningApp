@@ -26,24 +26,11 @@ public class Event {
 	
 	public Event(Cursor cursor) {
 		this();
-		if (cursor.getCount() != 0) {
-			Log.i("Event.class", "" + cursor.getColumnCount());
-			Log.i("Event.class", "" + cursor.getCount());
-			setId(cursor.getString(Events.PROJECTION_ID_INDEX));
-			setDtStart(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
-			setDtEnd(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
-			setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
-			setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
-		}
-	}
-	
-	public Event(ClipData data) {
-		this();
-		setId((String)data.getItemAt(Events.PROJECTION_ID_INDEX).getText());
-		setTitle((String)data.getItemAt(Events.PROJECTION_TITLE_INDEX).getText());
-		setCalendarId((String)data.getItemAt(Events.PROJECTION_CALENDARID_INDEX).getText());
-		setDtStart((String)data.getItemAt(Events.PROJECTION_DTSTART_INDEX).getText());
-		setDtEnd((String)data.getItemAt(Events.PROJECTION_DTEND_INDEX).getText());
+		setId(cursor.getString(Events.PROJECTION_ID_INDEX));
+		setDtStart(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
+		setDtEnd(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
+		setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
+		setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
 	}
 	
 	public Event(String calendarId, long time) {
@@ -146,14 +133,6 @@ public class Event {
 		final ClipData data = new ClipData(Event.class.getName(), 
 										   new String[] { ClipDescription.MIMETYPE_TEXT_PLAIN },
 										   idItem);
-		// final ClipData.Item titleItem = new ClipData.Item(getTitle());
-		// final ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDtStartinMillis()));
-		// final ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDtEndinMillis()));
-		// final ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
-		// data.addItem(titleItem);
-		// data.addItem(dtStartItem);
-		// data.addItem(dtEndItem);
-		// data.addItem(calendarIdItem);
 		return data;
 	}
 }

@@ -3,7 +3,7 @@ package com.littlewhywhat.planning.android.ui.event.edit;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
-import com.littlewhywhat.planning.android.data.event.EventsHelper;
+import com.littlewhywhat.planning.android.data.event.EventsResolver;
 import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
 import android.content.Context;
 import android.app.LoaderManager;
@@ -26,22 +26,22 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 	private static String EVENT_ID_KEY = "EVENT_ID";
 	private Activity mContext;
 	private Event mEvent;
-	private EventsHelper mEventsHelper;
+	private EventsResolver mEventsResolver;
 	public EditEventLayout(Context context) {
 		super(context);
 		mContext = (Activity)context;
-		mEventsHelper = new EventsHelper(context);
+		mEventsResolver = new EventsResolver(context.getContentResolver());
 	}
 	public EditEventLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = (Activity)context;
-		mEventsHelper = new EventsHelper(context);
+		mEventsResolver = new EventsResolver(context.getContentResolver());
 	}
 	
 	public EditEventLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 		mContext = (Activity)context;
-		mEventsHelper = new EventsHelper(context);
+		mEventsResolver = new EventsResolver(context.getContentResolver());
 	}
 	@Override
 	public void processEvent(Event event) {
@@ -60,14 +60,14 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 
 			@Override
 			public void onClick(View arg0) {
-				mEventsHelper.Update(mEvent);				
+				mEventsResolver.Update(mEvent);				
 			}			
 		});
 		getDeleteButton().setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				mEventsHelper.Delete(mEvent);	
+				mEventsResolver.Delete(mEvent);	
 				setViewWithoutEvent();
 			}			
 		});
