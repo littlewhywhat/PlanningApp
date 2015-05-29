@@ -1,6 +1,7 @@
 package com.littlewhywhat.planning.android.ui.event.view;
 
 import com.littlewhywhat.planning.android.R;
+
 import com.littlewhywhat.planning.android.data.event.EventsLoader;
 
 import android.app.Fragment;
@@ -8,21 +9,18 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.ListView;
 
 public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {	
-	private static final String TAG = "EventsFragment";
-
-	private static final String CALENDAR_ID_KEY = "CALENDAR_ID";
-	private static final String DTSTART_KEY = "DTSTART";
-	private static final String DTEND_KEY = "DTEND";
+	private static final String CALENDAR_ID_BUNDLE_KEY = "CALENDAR_ID";
+	private static final String DTSTART_BUNDLE_KEY = "DTSTART";
+	private static final String DTEND_BUNDLE_KEY = "DTEND";
 	private static final int LOADER_ID = 0;
 
-	private EventsCursorAdapter eventsAdapter;
+	private EventsCursorAdapter mEventsAdapter;
 		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,45 +30,42 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);	
-		Log.i(TAG, "OnActivityCreated()");
-		eventsAdapter = new EventsCursorAdapter(getActivity());
-		getListView().setAdapter(eventsAdapter);
+		mEventsAdapter = new EventsCursorAdapter(getActivity());
+		getListView().setAdapter(mEventsAdapter);
 	}
 
 	private ListView getListView() {
 		return (ListView)getActivity().findViewById(R.id.eventslistView);
 	}
-
-	private Bundle getBundle(long start, long end, String calendarId) {
+	
+	public void restartLoader(long dtStart, long dtEnd, String calendarId) {
+		getLoaderManager().restartLoader(LOADER_ID, getBundle(dtStart, dtEnd, calendarId), this);
+	}
+	
+	private Bundle getBundle(long dtStart, long dtEnd, String calendarId) {
 		Bundle bundle = new Bundle();
-		bundle.putString(CALENDAR_ID_KEY, calendarId);
-		bundle.putString(DTSTART_KEY, String.valueOf(start));
-		bundle.putString(DTEND_KEY, String.valueOf(end));
+		bundle.putString(CALENDAR_ID_BUNDLE_KEY, calendarId);
+		bundle.putString(DTSTART_BUNDLE_KEY, String.valueOf(dtStart));
+		bundle.putString(DTEND_BUNDLE_KEY, String.valueOf(dtEnd));
 		return bundle;
 	}
-	
-	public void restartLoader(long start, long end, String calendarId) {
-		Log.i(TAG, "restart Loader");
-		getLoaderManager().restartLoader(LOADER_ID, getBundle(start, end, calendarId), this);
-	}
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Log.i(TAG, "onCreateLoader()");
-		return new EventsLoader(getActivity(), args.getString(DTSTART_KEY), 
-				args.getString(DTEND_KEY), args.getString(CALENDAR_ID_KEY));
+		final String dtStart = args.getString(DTSTART_BUNDLE_KEY);
+		final String dtEnd = args.getString(DTEND_BUNDLE_KEY);
+		final String calendarId = args.getString(CALENDAR_ID_BUNDLE_KEY);
+		return new EventsLoader(getActivity(), dtStart, dtEnd, calendarId);
 	}
 	
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		Log.i(TAG, "onLoadFinished()");
-		eventsAdapter.swapCursor(cursor);			
+		mEventsAdapter.swapCursor(cursor);			
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		Log.i(TAG, "onLoadReset()");
-		eventsAdapter.swapCursor(null);		
+		mEventsAdapter.swapCursor(null);		
 	}
 }
 
