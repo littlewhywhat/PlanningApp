@@ -9,10 +9,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import android.graphics.Color;
 import com.littlewhywhat.planning.android.ui.event.EventProcessor;
+import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
 
 public class EditEventLayout extends RelativeLayout implements
-		EventProcessor, SeekBar.OnSeekBarChangeListener {
+		EventProcessor, OnEventDragListenerView, SeekBar.OnSeekBarChangeListener {
 
 	private Event mEvent;
 	private EventsHelper mEventsHelper;
@@ -126,5 +128,27 @@ public class EditEventLayout extends RelativeLayout implements
 	public void onStopTrackingTouch(SeekBar seekbar) {
 		
 	}
+
+	@Override
+	public void dragExited() {
+		changeBackgroundColor(Color.GREEN);
+	}
+
+	public void dragEntered() {
+		changeBackgroundColor(Color.BLUE);
+	}
+
+    public void recover() {
+    	changeBackgroundColor(Color.TRANSPARENT);
+    }
+
+    public void drop(String eventId) {
+    	getTitleView().setText(eventId);
+    }
+
+    private void changeBackgroundColor(int color) {
+        this.setBackgroundColor(color);
+        this.invalidate();
+    }
 
 }

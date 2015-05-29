@@ -8,59 +8,45 @@ import android.view.DragEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
 import android.content.ClipData;
-import android.graphics.Color;
 
 public class OnEventDragListener implements OnDragListener {
 
+    public interface OnEventDragListenerView {
+        public void dragExited();
+        public void dragEntered();
+        public void recover();
+        public void drop(String eventId);
+    }
+
 	@Override
 	public boolean onDrag(View v, DragEvent event) {
-        final int action = event.getAction();
-        switch(action) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                final String eventLabel = event.getClipDescription().getLabel().toString();
-                if (eventLabel.equals(Event.class.getName())) {        	
-                    highlightExit(v);
+        if (v instanceof OnEventDragListenerView) {
+            final int action = event.getAction();
+            final OnEventDragListenerView view = (OnEventDragListenerView)v;
+            switch(action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    view.dragExited();
                     return true;
-                } else
-                    return false;   
-            case DragEvent.ACTION_DRAG_ENTERED:
-                highlightEnter(v);
-                return true;
-            case DragEvent.ACTION_DRAG_LOCATION:
-                return true;
-            case DragEvent.ACTION_DRAG_EXITED:
-                highlightExit(v);
-                return true;
-            case DragEvent.ACTION_DROP:                	
-            	if (v instanceof EventProcessor) {            		
-            		ClipData data = event.getClipData();
-            		Event dataEvent =  new Event(data);
-            		((EventProcessor)v).processEvent(dataEvent);
-            	}
-            	recover(v);
-            	return true;      
-            case DragEvent.ACTION_DRAG_ENDED:
-            	recover(v);
-            	return true;
-            default:
-                return false;
-        }
-    }
-
-    private void changeBackgroundColor(View v, int color) {
-        v.setBackgroundColor(color);
-        v.invalidate();
-    }
-
-    private void highlightEnter(View v) {
-        changeBackgroundColor(v, Color.GREEN);
-    }
-
-    private void highlightExit(View v) {
-        changeBackgroundColor(v, Color.BLUE);
-    }
-
-    private void recover(View v) {
-        changeBackgroundColor(v, Color.TRANSPARENT);
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    view.dragEntered();
+                    return true;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    return true;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    view.dragExited();
+                    return true;
+                case DragEvent.ACTION_DROP:                	
+               		ClipData data = event.getClipData();
+                    view.drop((String)data.getItemAt(0).getText());
+                	view.recover();
+                	return true;      
+                case DragEvent.ACTION_DRAG_ENDED:
+                	view.recover();
+                	return true;
+                default:
+                    return false;
+            }
+        } else
+            return false;
     }
 }

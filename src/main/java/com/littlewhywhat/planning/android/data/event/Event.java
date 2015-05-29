@@ -141,14 +141,14 @@ public class Event {
 		final ClipData data = new ClipData(Event.class.getName(), 
 										   new String[] { ClipDescription.MIMETYPE_TEXT_PLAIN },
 										   idItem);
-		final ClipData.Item titleItem = new ClipData.Item(getTitle());
-		final ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDtStartinMillis()));
-		final ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDtEndinMillis()));
-		final ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
-		data.addItem(titleItem);
-		data.addItem(dtStartItem);
-		data.addItem(dtEndItem);
-		data.addItem(calendarIdItem);
+		// final ClipData.Item titleItem = new ClipData.Item(getTitle());
+		// final ClipData.Item dtStartItem = new ClipData.Item(String.valueOf(getDtStartinMillis()));
+		// final ClipData.Item dtEndItem = new ClipData.Item(String.valueOf(getDtEndinMillis()));
+		// final ClipData.Item calendarIdItem = new ClipData.Item(getCalendarId());
+		// data.addItem(titleItem);
+		// data.addItem(dtStartItem);
+		// data.addItem(dtEndItem);
+		// data.addItem(calendarIdItem);
 		return data;
 	}
 }
