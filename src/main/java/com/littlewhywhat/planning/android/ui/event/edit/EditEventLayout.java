@@ -5,9 +5,11 @@ import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsResolver;
 import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
-import android.content.Context;
+import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
+
 import android.app.LoaderManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,12 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import android.graphics.Color;
-import android.os.Bundle;
-import com.littlewhywhat.planning.android.ui.event.EventProcessor;
-import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
 
 public class EditEventLayout extends RelativeLayout implements LoaderManager.LoaderCallbacks<Cursor>,
-		EventProcessor, OnEventDragListenerView, SeekBar.OnSeekBarChangeListener {
+		OnEventDragListenerView, SeekBar.OnSeekBarChangeListener {
 
 	private static String EVENT_ID_KEY = "EVENT_ID";
 	private Activity mContext;
@@ -43,7 +42,7 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 		mContext = (Activity)context;
 		mEventsResolver = new EventsResolver(context.getContentResolver());
 	}
-	@Override
+
 	public void processEvent(Event event) {
 		mEvent = event;
 		getEditDtStartSeekBar().setEnabled(true);
@@ -155,7 +154,6 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
     }
 
     public void drop(String eventId) {
-    	//getTitleView().setText(eventId);
     	restartLoader(eventId);
     }
 
@@ -185,7 +183,6 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 		Log.i(EditEventLayout.class.getName(), "onLoadFinished");
 		if (cursor.getCount() > 0) {
 			cursor.moveToNext();
-
 			mEvent = new Event(cursor);
 			processEvent(mEvent);
 		} else

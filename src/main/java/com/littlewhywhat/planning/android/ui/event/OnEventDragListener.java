@@ -1,9 +1,5 @@
 package com.littlewhywhat.planning.android.ui.event;
 
-import com.littlewhywhat.planning.android.data.event.Event;
-import com.littlewhywhat.planning.android.ui.event.EventProcessor;
-import android.util.Log;
-
 import android.view.DragEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
