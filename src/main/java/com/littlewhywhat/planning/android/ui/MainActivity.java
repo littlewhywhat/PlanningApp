@@ -46,6 +46,17 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		});
 	}
 
+	@Override 
+	public void refresh() {
+		setTimeViewText();
+		refreshEvents();
+	}
+
+	@Override
+	public Calendar getCalendar() {
+		return calendar;
+	}
+
 	private Button getInsertButton() {
 		return (Button) findViewById(R.id.insertDateButton);
 	}
@@ -60,17 +71,17 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		refreshEvents();
 	}
 
-	@Override
-	public void onDateChanged(long millis) {
-		calendar.setTimeInMillis(millis);
-		setTimeViewText();
-		refreshEvents();		
-	}
+	// @Override
+	// public void onDateChanged(long millis) {
+	// 	calendar.setTimeInMillis(millis);
+	// 	setTimeViewText();
+	// 	refreshEvents();		
+	// }
 
-	@Override
-	public String getDateKey() {
-		return DATE_KEY;
-	}
+	// @Override
+	// public String getDateKey() {
+	// 	return DATE_KEY;
+	// }
 	private void setDefaultDate() {
 	    calendar = new GregorianCalendar();
 	    calendar.clear(Calendar.HOUR_OF_DAY);
