@@ -4,7 +4,7 @@ import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsHelper;
-import com.littlewhywhat.planning.android.data.event.EventLoader;
+import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
 import android.content.Context;
 import android.app.LoaderManager;
 import android.app.Activity;
@@ -177,7 +177,7 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 
     @Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new EventLoader(mContext, args.getString(EVENT_ID_KEY));
+		return new EventsLoaderById(mContext, args.getString(EVENT_ID_KEY));
 	}
 	
 	@Override
