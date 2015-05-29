@@ -6,6 +6,7 @@ import java.util.Calendar;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.database.Cursor;
+import android.util.Log;
 
 public class Event {
 	private static final String DEFAULT_TITLE = "New Event";
@@ -25,11 +26,15 @@ public class Event {
 	
 	public Event(Cursor cursor) {
 		this();
-		setId(cursor.getString(Events.PROJECTION_ID_INDEX));
-		setDtStart(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
-		setDtEnd(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
-		setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
-		setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
+		if (cursor.getCount() != 0) {
+			Log.i("Event.class", "" + cursor.getColumnCount());
+			Log.i("Event.class", "" + cursor.getCount());
+			setId(cursor.getString(Events.PROJECTION_ID_INDEX));
+			setDtStart(cursor.getLong(Events.PROJECTION_DTSTART_INDEX));
+			setDtEnd(cursor.getLong(Events.PROJECTION_DTEND_INDEX));
+			setTitle(cursor.getString(Events.PROJECTION_TITLE_INDEX));
+			setCalendarId(cursor.getString(Events.PROJECTION_CALENDARID_INDEX));
+		}
 	}
 	
 	public Event(ClipData data) {

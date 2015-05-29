@@ -4,31 +4,43 @@ import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsHelper;
+import com.littlewhywhat.planning.android.data.event.EventLoader;
 import android.content.Context;
+import android.app.LoaderManager;
+import android.app.Activity;
+import android.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import android.graphics.Color;
+import android.os.Bundle;
 import com.littlewhywhat.planning.android.ui.event.EventProcessor;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
 
-public class EditEventLayout extends RelativeLayout implements
+public class EditEventLayout extends RelativeLayout implements LoaderManager.LoaderCallbacks<Cursor>,
 		EventProcessor, OnEventDragListenerView, SeekBar.OnSeekBarChangeListener {
 
+	private static String EVENT_ID_KEY = "EVENT_ID";
+	private Activity mContext;
 	private Event mEvent;
 	private EventsHelper mEventsHelper;
 	public EditEventLayout(Context context) {
 		super(context);
+		mContext = (Activity)context;
 		mEventsHelper = new EventsHelper(context);
 	}
 	public EditEventLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mContext = (Activity)context;
 		mEventsHelper = new EventsHelper(context);
 	}
 	
 	public EditEventLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
+		mContext = (Activity)context;
 		mEventsHelper = new EventsHelper(context);
 	}
 	@Override
@@ -143,7 +155,8 @@ public class EditEventLayout extends RelativeLayout implements
     }
 
     public void drop(String eventId) {
-    	getTitleView().setText(eventId);
+    	//getTitleView().setText(eventId);
+    	restartLoader(eventId);
     }
 
     private void changeBackgroundColor(int color) {
@@ -151,4 +164,36 @@ public class EditEventLayout extends RelativeLayout implements
         this.invalidate();
     }
 
+
+	private Bundle getBundle(String eventId) {
+		Bundle bundle = new Bundle();
+		bundle.putString(EVENT_ID_KEY, eventId);
+		return bundle;
+	}
+	
+	private void restartLoader(String eventId) {
+		mContext.getLoaderManager().restartLoader(0, getBundle(eventId), this);
+	}
+
+    @Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new EventLoader(mContext, args.getString(EVENT_ID_KEY));
+	}
+	
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.i(EditEventLayout.class.getName(), "onLoadFinished");
+		if (cursor.getCount() > 0) {
+			cursor.moveToNext();
+
+			mEvent = new Event(cursor);
+			processEvent(mEvent);
+		} else
+			setViewWithoutEvent();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		setViewWithoutEvent();		
+	}
 }

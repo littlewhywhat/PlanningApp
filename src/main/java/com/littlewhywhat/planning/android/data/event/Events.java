@@ -22,6 +22,7 @@ class Events {
             + CalendarContract.Events.DTEND + " <= ?) AND (" 
             + CalendarContract.Events.DELETED + " != '1') AND (" 
             + CalendarContract.Events.CALENDAR_ID + " <= ?)) ";
+	public static final String selectionById = "((" + CalendarContract.Events._ID + " = ?))";
 	public static final Uri CONTENT_URI = CalendarContract.Events.CONTENT_URI;
 
 	public static Uri getUriWithId(String id) {
