@@ -4,11 +4,11 @@ import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.EventsLoader;
 import com.littlewhywhat.planning.android.data.event.Event;
+import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -39,11 +39,8 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				final ClipData.Item idItem = new ClipData.Item(String.valueOf(id));
-				final ClipData data = new ClipData(ClipData.class.getName(), new String[] {
-													ClipDescription.MIMETYPE_TEXT_PLAIN 
-													}, idItem);
 				final View.DragShadowBuilder builder = new View.DragShadowBuilder(view);
+				final ClipData data = OnEventDragListener.getDragClipData(String.valueOf(id));
 				view.startDrag(data, builder, null, 0);
 				return true;
 			}
