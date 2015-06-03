@@ -1,55 +1,37 @@
 package com.littlewhywhat.planning.android.ui.event.view;
 
 import com.littlewhywhat.planning.android.R;
-import com.littlewhywhat.planning.android.data.event.Event;
 
 import android.content.Context;
-import android.content.ClipData;
-import android.content.ClipDescription;
-import android.database.Cursor;
-import android.provider.CalendarContract.Events;
-import android.widget.*;
-import android.view.*;
+import android.provider.CalendarContract;
+import android.widget.TextView;
+import android.widget.SimpleCursorAdapter;
+
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 
 class EventsCursorAdapter extends SimpleCursorAdapter {
-	
-	
-	private static final String[] from = new String[] { Events.TITLE, Events.DTSTART, Events.DTEND };
-	private Context appContext;
+	private static final String[] from = new String[] { CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND };
+	private static final int[] to = new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime};
+	private static final int ZERO_FLAG = 0;
+
+	private Calendar mCalendar = new GregorianCalendar();
+
 	public EventsCursorAdapter(Context context) {
-		super(context, R.layout.event, null , from, 
-				new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime}, 0);
-		appContext = context;		
-	}
-	
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		final Cursor cursor = (Cursor)getItem(position);
-		final Event event = new Event(cursor);
-		
-		LayoutInflater inflater = (LayoutInflater)appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		RelativeLayout itemLayout =  (RelativeLayout)inflater.inflate(R.layout.event, null);	
-		final TextView titleView = (TextView)itemLayout.findViewById(R.id.eventTitle);
-		titleView.setText(event.getTitle());
-		final TextView startDate = (TextView)itemLayout.findViewById(R.id.eventStartTime);
-		startDate.setText(event.getDtStartInString());
-		final TextView endDate = (TextView)itemLayout.findViewById(R.id.eventEndTime);
-		endDate.setText(event.getDtEndInString());
-		
-		itemLayout.setOnLongClickListener(new View.OnLongClickListener() {			
-			@Override
-			public boolean onLongClick(View v) {
-				View.DragShadowBuilder builder = new View.DragShadowBuilder(v);
-	
-				final ClipData.Item idItem = new ClipData.Item(event.getId());
-				final ClipData data = new ClipData(Event.class.getName(), new String[] {
-													ClipDescription.MIMETYPE_TEXT_PLAIN 
-													}, idItem);
-				v.startDrag(data, builder, null, 0);
-				return true;
-			}
-		});
-		return itemLayout;
+		super(context, R.layout.event, null , from, to, ZERO_FLAG);
 	}
 
+	@Override
+	public void setViewText(TextView v, String text) {
+		final int id = v.getId();
+		String finalText = text;
+		switch(id) {
+			case R.id.eventStartTime: case R.id.eventEndTime:
+				mCalendar.setTimeInMillis(Long.parseLong(text));
+				finalText = mCalendar.getTime().toString();
+				break;
+			default: break;
+		}
+		v.setText(finalText);
+	}
 }

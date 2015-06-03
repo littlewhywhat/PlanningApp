@@ -3,15 +3,19 @@ package com.littlewhywhat.planning.android.ui.event.view;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.EventsLoader;
+import com.littlewhywhat.planning.android.data.event.Event;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class EventsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {	
@@ -32,6 +36,18 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		super.onActivityCreated(savedInstanceState);	
 		mEventsAdapter = new EventsCursorAdapter(getActivity());
 		getListView().setAdapter(mEventsAdapter);
+		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				final ClipData.Item idItem = new ClipData.Item(String.valueOf(id));
+				final ClipData data = new ClipData(ClipData.class.getName(), new String[] {
+													ClipDescription.MIMETYPE_TEXT_PLAIN 
+													}, idItem);
+				final View.DragShadowBuilder builder = new View.DragShadowBuilder(view);
+				view.startDrag(data, builder, null, 0);
+				return true;
+			}
+		});
 	}
 
 	private ListView getListView() {
