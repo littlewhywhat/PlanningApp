@@ -36,7 +36,6 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		setTimeViewText();
 		setChooseDateButton();
 		setInsertEventButton();
-		setDragListener();
 	}
 
 	@Override 
@@ -49,14 +48,10 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	public Calendar getCalendar() {
 		return mCalendar;
 	}
-
-	private void setDragListener() {
-		findViewById(R.id.editEventFragment).setOnDragListener(new OnEventDragListener());
-	}
 	
 	@Override
-	public void onCalendarChoose(String CalendarId) {		
-		mCalendarId = CalendarId;
+	public void onCalendarChoose(String calendarId) {		
+		mCalendarId = calendarId;
 		refreshEvents();
 	}
 
@@ -76,7 +71,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	private void setInsertEventButton() {
 		((Button)findViewById(R.id.insertDateButton)).setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				Event event = new Event(mCalendarId, mCalendar.getTimeInMillis());
 				mEventsResolver.Insert(event);
 			}			

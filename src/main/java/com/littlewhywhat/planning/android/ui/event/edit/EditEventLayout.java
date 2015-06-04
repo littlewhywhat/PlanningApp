@@ -145,14 +145,17 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 		changeBackgroundColor(Color.GREEN);
 	}
 
+	@Override
 	public void dragEntered() {
 		changeBackgroundColor(Color.BLUE);
 	}
 
+	@Override
     public void recover() {
     	changeBackgroundColor(Color.TRANSPARENT);
     }
 
+    @Override
     public void drop(String eventId) {
     	restartLoader(eventId);
     }
@@ -161,7 +164,6 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
         this.setBackgroundColor(color);
         this.invalidate();
     }
-
 
 	private Bundle getBundle(String eventId) {
 		Bundle bundle = new Bundle();
