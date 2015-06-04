@@ -17,12 +17,14 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Button;
 
+import java.text.DateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
 public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener {
 	private static final String DATEPICKER_FRAGMENT_TAG = "DatePickerFragment";
 	private static final String DEFAULT_EVENT_TITLE = "New Event";
+	private static final DateFormat DF = DateFormat.getDateInstance();
 	private Calendar mCalendar;
 	private String mCalendarId;
 	private EventsResolver mEventsResolver;
@@ -65,7 +67,7 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 	}
 
 	private void setTimeViewText() {
-		((TextView)findViewById(R.id.timeView)).setText(mCalendar.getTime().toString());
+		((TextView)findViewById(R.id.timeView)).setText(DF.format(mCalendar.getTime()));
 	}
 
 	private void setInsertEventButton() {

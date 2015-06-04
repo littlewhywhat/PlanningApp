@@ -15,7 +15,7 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 	private static final String[] from = new String[] { CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND };
 	private static final int[] to = new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime};
 	private static final int ZERO_FLAG = 0;
-	private static final DateFormat DF = DateFormat.getDateInstance();
+	private static final DateFormat DF = DateFormat.getTimeInstance();
 
 	private Calendar mCalendar = new GregorianCalendar();
 
@@ -30,7 +30,7 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 		switch(id) {
 			case R.id.eventStartTime: case R.id.eventEndTime:
 				mCalendar.setTimeInMillis(Long.parseLong(text));
-				finalText = mCalendar.getTime().toString();
+				finalText = DF.format(mCalendar.getTime());
 				break;
 			default: break;
 		}

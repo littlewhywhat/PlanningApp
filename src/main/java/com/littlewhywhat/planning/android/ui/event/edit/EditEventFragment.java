@@ -24,12 +24,14 @@ import android.widget.TextView;
 import android.widget.RelativeLayout;
 
 import java.util.Calendar;
+import java.text.DateFormat;
 
 public class EditEventFragment extends Fragment 
 		implements LoaderManager.LoaderCallbacks<Cursor>, SeekBar.OnSeekBarChangeListener {
 	private static final int MINUTES_IN_HOUR = 60;
 	private static final String EVENT_ID_KEY = "EVENT_ID";
 	private static final int LOADER_ID = 0;
+	private static final DateFormat DF = DateFormat.getTimeInstance();
 
 	private Event mEvent;
 	private EventsResolver mEventsResolver;
@@ -145,8 +147,8 @@ public class EditEventFragment extends Fragment
 	private void refreshTextViews() {
 		if (mEvent != null) {
 			getTitleView().setText(mEvent.getTitle());
-			getDtStartView().setText(mEvent.getDtStart().getTime().toString());
-			getDtEndView().setText(mEvent.getDtEnd().getTime().toString());	
+			getDtStartView().setText(DF.format(mEvent.getDtStart().getTime()));
+			getDtEndView().setText(DF.format(mEvent.getDtEnd().getTime()));	
 		} else {
 			getTitleView().setText(R.string.drag_here);
 			getDtStartView().setText(null);
