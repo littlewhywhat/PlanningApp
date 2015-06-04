@@ -2,10 +2,16 @@ package com.littlewhywhat.planning.android.ui.event.edit;
 
 import com.littlewhywhat.planning.android.R;
 
+import com.littlewhywhat.planning.android.data.event.Event;
+import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
+
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.ClipDescription;
+import android.content.Loader;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.DragEvent;
@@ -14,7 +20,10 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.widget.SeekBar;
 
-public class EditEventFragment extends Fragment {
+public class EditEventFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+	private static final String EVENT_ID_KEY = "EVENT_ID";
+	private static final int LOADER_ID = 0;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.edit_event_layout, container, false);
@@ -44,7 +53,7 @@ public class EditEventFragment extends Fragment {
 	                case DragEvent.ACTION_DRAG_LOCATION:
 	                    return true;
 	                case DragEvent.ACTION_DROP:                	
-	                    getEditEventLayout().restartLoader((String)event.getClipData().getItemAt(0).getText());
+	                    restartLoader((String)event.getClipData().getItemAt(0).getText());
 	                	recover(v);
 	                	return true;      
 	                case DragEvent.ACTION_DRAG_ENDED:
@@ -86,5 +95,32 @@ public class EditEventFragment extends Fragment {
 		return (SeekBar) getActivity().findViewById(R.id.editDtEndSeekBar);
 	}
 	
+	private Bundle getBundle(String eventId) {
+		Bundle bundle = new Bundle();
+		bundle.putString(EVENT_ID_KEY, eventId);
+		return bundle;
+	}
+	
+	private void restartLoader(String eventId) {
+		getLoaderManager().restartLoader(LOADER_ID, getBundle(eventId), this);
+	}
 
+    @Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new EventsLoaderById(getActivity(), args.getString(EVENT_ID_KEY));
+	}
+	
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (cursor.getCount() > 0) {
+			cursor.moveToNext();
+			getEditEventLayout().processEvent(new Event(cursor));
+		} else
+			getEditEventLayout().setViewWithoutEvent();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		getEditEventLayout().setViewWithoutEvent();		
+	}
 }
