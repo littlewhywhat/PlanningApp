@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 public class EditEventFragment extends Fragment 
 		implements LoaderManager.LoaderCallbacks<Cursor>, SeekBar.OnSeekBarChangeListener {
@@ -104,6 +105,10 @@ public class EditEventFragment extends Fragment
 		return (TextView) getActivity().findViewById(R.id.editTitleView);		
 	}
 
+	private RelativeLayout getEditEventLayout() {
+		return (RelativeLayout) getActivity().findViewById(R.id.editEventFragment);
+	}
+
 	private void setWithoutEvent() {
 		mEvent = null;
 		refreshTextViews();
@@ -174,10 +179,6 @@ public class EditEventFragment extends Fragment
         view.setBackgroundColor(color);
         view.invalidate();
     }
-
-	private EditEventLayout getEditEventLayout() {
-		return (EditEventLayout) getActivity().findViewById(R.id.editEventFragment);
-	}
 
 	@Override
 	public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
