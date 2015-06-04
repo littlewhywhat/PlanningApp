@@ -5,12 +5,10 @@ import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
 import com.littlewhywhat.planning.android.data.event.EventsResolver;
-import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
-import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
+import com.littlewhywhat.planning.android.ui.event.Drag;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.ClipDescription;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -48,7 +46,7 @@ public class EditEventFragment extends Fragment
 	            final int action = event.getAction();
 	            switch(action) {
 	                case DragEvent.ACTION_DRAG_STARTED:
-	                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+	                    if (Drag.checkEvent(event)) {
 	                    	dragExited(v);
 	                    	return true;
 	                	}
@@ -62,7 +60,7 @@ public class EditEventFragment extends Fragment
 	                case DragEvent.ACTION_DRAG_LOCATION:
 	                    return true;
 	                case DragEvent.ACTION_DROP:                	
-	                    restartLoader((String)event.getClipData().getItemAt(0).getText());
+	                    restartLoader(Drag.getEventId(event.getClipData()));
 	                	recover(v);
 	                	return true;      
 	                case DragEvent.ACTION_DRAG_ENDED:
