@@ -20,7 +20,7 @@ import android.widget.*;
 import android.graphics.Color;
 
 public class EditEventLayout extends RelativeLayout implements LoaderManager.LoaderCallbacks<Cursor>,
-		OnEventDragListenerView, SeekBar.OnSeekBarChangeListener {
+		SeekBar.OnSeekBarChangeListener {
 
 	private static String EVENT_ID_KEY = "EVENT_ID";
 	private Activity mContext;
@@ -140,38 +140,13 @@ public class EditEventLayout extends RelativeLayout implements LoaderManager.Loa
 		
 	}
 
-	@Override
-	public void dragExited() {
-		changeBackgroundColor(Color.GREEN);
-	}
-
-	@Override
-	public void dragEntered() {
-		changeBackgroundColor(Color.BLUE);
-	}
-
-	@Override
-    public void recover() {
-    	changeBackgroundColor(Color.TRANSPARENT);
-    }
-
-    @Override
-    public void drop(String eventId) {
-    	restartLoader(eventId);
-    }
-
-    private void changeBackgroundColor(int color) {
-        this.setBackgroundColor(color);
-        this.invalidate();
-    }
-
 	private Bundle getBundle(String eventId) {
 		Bundle bundle = new Bundle();
 		bundle.putString(EVENT_ID_KEY, eventId);
 		return bundle;
 	}
 	
-	private void restartLoader(String eventId) {
+	public void restartLoader(String eventId) {
 		mContext.getLoaderManager().restartLoader(0, getBundle(eventId), this);
 	}
 

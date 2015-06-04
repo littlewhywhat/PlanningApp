@@ -5,6 +5,8 @@ import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
 import android.app.Fragment;
+import android.content.ClipDescription;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -25,35 +27,55 @@ public class EditEventFragment extends Fragment {
 		getEditEventLayout().setOnDragListener(new View.OnDragListener() {
 			@Override
 			public boolean onDrag(View v, DragEvent event) {
-		        if (v instanceof OnEventDragListenerView) {
-		            final int action = event.getAction();
-		            final OnEventDragListenerView view = (OnEventDragListenerView)v;
-		            switch(action) {
-		                case DragEvent.ACTION_DRAG_STARTED: case DragEvent.ACTION_DRAG_EXITED:
-		                    view.dragExited();
-		                    return true;
-		                case DragEvent.ACTION_DRAG_ENTERED:
-		                    view.dragEntered();
-		                    return true;
-		                case DragEvent.ACTION_DRAG_LOCATION:
-		                    return true;
-		                case DragEvent.ACTION_DROP:                	
-		                    view.drop((String)event.getClipData().getItemAt(0).getText());
-		                	view.recover();
-		                	return true;      
-		                case DragEvent.ACTION_DRAG_ENDED:
-		                	view.recover();
-		                	return true;
-		                default:
-		                    return false;
-		            }
-		        } else
-		            return false;
+	            final int action = event.getAction();
+	            switch(action) {
+	                case DragEvent.ACTION_DRAG_STARTED:
+	                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+	                    	dragExited(v);
+	                    	return true;
+	                	}
+	                	return false;
+	                case DragEvent.ACTION_DRAG_EXITED:
+	                	dragExited(v);
+	                	return true;
+	                case DragEvent.ACTION_DRAG_ENTERED:
+	                    dragEntered(v);
+	                    return true;
+	                case DragEvent.ACTION_DRAG_LOCATION:
+	                    return true;
+	                case DragEvent.ACTION_DROP:                	
+	                    getEditEventLayout().restartLoader((String)event.getClipData().getItemAt(0).getText());
+	                	recover(v);
+	                	return true;      
+	                case DragEvent.ACTION_DRAG_ENDED:
+	                	recover(v);
+	                	return true;
+	                default:
+	                    return false;
+	            }
+		        
 			}
 		});
 		getEditEventLayout().setViewWithoutEvent();	
 	}
 	
+	public void dragExited(View view) {
+		changeBackgroundColor(view, Color.GREEN);
+	}
+
+	public void dragEntered(View view) {
+		changeBackgroundColor(view, Color.BLUE);
+	}
+
+    public void recover(View view) {
+    	changeBackgroundColor(view, Color.TRANSPARENT);
+    }
+
+    private void changeBackgroundColor(View view, int color) {
+        view.setBackgroundColor(color);
+        view.invalidate();
+    }
+
 	private EditEventLayout getEditEventLayout() {
 		return (EditEventLayout) getActivity().findViewById(R.id.editEventFragment);
 	}
@@ -64,4 +86,5 @@ public class EditEventFragment extends Fragment {
 		return (SeekBar) getActivity().findViewById(R.id.editDtEndSeekBar);
 	}
 	
+
 }
