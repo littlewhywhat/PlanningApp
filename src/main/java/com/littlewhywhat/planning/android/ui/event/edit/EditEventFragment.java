@@ -38,6 +38,11 @@ public class EditEventFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState)	{
 		super.onActivityCreated(savedInstanceState);	
 		mEventsResolver = new EventsResolver(getActivity().getContentResolver());
+		setListeners();
+		setWithoutEvent();	
+	}
+
+	private void setListeners() {
 		getEditDtStartSeekBar().setOnSeekBarChangeListener(this);
 		getEditDtEndSeekBar().setOnSeekBarChangeListener(this);
 		getEditEventLayout().setOnDragListener(new View.OnDragListener() {
@@ -69,10 +74,20 @@ public class EditEventFragment extends Fragment
 	                default:
 	                    return false;
 	            }
-		        
 			}
 		});
-		setWithoutEvent();	
+		getUpdateButton().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mEventsResolver.Update(mEvent);				
+			}			
+		});
+		getDeleteButton().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mEventsResolver.Delete(mEvent);
+			}			
+		});
 	}
 	
 	private Button getUpdateButton() {
@@ -121,18 +136,6 @@ public class EditEventFragment extends Fragment
 		refreshSeekBars();
 		getUpdateButton().setEnabled(true);
 		getDeleteButton().setEnabled(true);
-		getUpdateButton().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mEventsResolver.Update(mEvent);				
-			}			
-		});
-		getDeleteButton().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mEventsResolver.Delete(mEvent);
-			}			
-		});
 	}
 
 	private void refreshTextViews() {
