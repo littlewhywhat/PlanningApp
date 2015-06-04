@@ -4,6 +4,7 @@ import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
+import com.littlewhywhat.planning.android.data.event.EventsResolver;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener;
 import com.littlewhywhat.planning.android.ui.event.OnEventDragListener.OnEventDragListenerView;
 
@@ -18,11 +19,17 @@ import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
-public class EditEventFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class EditEventFragment extends Fragment 
+		implements LoaderManager.LoaderCallbacks<Cursor>, SeekBar.OnSeekBarChangeListener {
 	private static final String EVENT_ID_KEY = "EVENT_ID";
 	private static final int LOADER_ID = 0;
+
+	private Event mEvent;
+	private EventsResolver mEventsResolver;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,8 +38,9 @@ public class EditEventFragment extends Fragment implements LoaderManager.LoaderC
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)	{
 		super.onActivityCreated(savedInstanceState);	
-		getEditDtStartSeekBar().setOnSeekBarChangeListener(getEditEventLayout());
-		getEditDtEndSeekBar().setOnSeekBarChangeListener(getEditEventLayout());
+		mEventsResolver = new EventsResolver(getActivity().getContentResolver());
+		getEditDtStartSeekBar().setOnSeekBarChangeListener(this);
+		getEditDtEndSeekBar().setOnSeekBarChangeListener(this);
 		getEditEventLayout().setOnDragListener(new View.OnDragListener() {
 			@Override
 			public boolean onDrag(View v, DragEvent event) {
@@ -65,18 +73,100 @@ public class EditEventFragment extends Fragment implements LoaderManager.LoaderC
 		        
 			}
 		});
-		getEditEventLayout().setViewWithoutEvent();	
+		setWithoutEvent();	
 	}
 	
-	public void dragExited(View view) {
+	private Button getUpdateButton() {
+		return (Button) getActivity().findViewById(R.id.updateButton);
+	}
+	
+	private Button getDeleteButton() {
+		return (Button) getActivity().findViewById(R.id.deleteButton);
+	}
+	
+	private SeekBar getEditDtStartSeekBar() { 
+		return (SeekBar) getActivity().findViewById(R.id.editDtStartSeekBar);
+	}
+
+	private SeekBar getEditDtEndSeekBar() {
+		return (SeekBar) getActivity().findViewById(R.id.editDtEndSeekBar);
+	}
+	
+	private TextView getDtEndView() {
+		return (TextView) getActivity().findViewById(R.id.editDtEndView);
+	}
+
+	private TextView getDtStartView() {
+		return (TextView) getActivity().findViewById(R.id.editDtStartView);
+	}
+
+	private TextView getTitleView() {
+		return (TextView) getActivity().findViewById(R.id.editTitleView);		
+	}
+
+	private void setWithoutEvent() {
+		mEvent = null;
+		refreshTextViews();
+		refreshSeekBars();
+		getUpdateButton().setEnabled(false);
+		getDeleteButton().setEnabled(false);
+	}
+
+	private void setWithEvent(Event event) {
+		mEvent = event;
+		refreshTextViews();
+		refreshSeekBars();
+		getUpdateButton().setEnabled(true);
+		getDeleteButton().setEnabled(true);
+		getUpdateButton().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mEventsResolver.Update(mEvent);				
+			}			
+		});
+		getDeleteButton().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mEventsResolver.Delete(mEvent);
+			}			
+		});
+	}
+
+	private void refreshTextViews() {
+		if (mEvent != null) {
+			getTitleView().setText(mEvent.getTitle());
+			getDtStartView().setText(mEvent.getDtStartInString());
+			getDtEndView().setText(mEvent.getDtEndInString());	
+		} else {
+			getTitleView().setText(R.string.drag_here);
+			getDtStartView().setText(null);
+			getDtEndView().setText(null);
+		}
+	}
+
+	private void refreshSeekBars() {
+		if (mEvent != null) {
+			getEditDtStartSeekBar().setEnabled(true);
+			getEditDtEndSeekBar().setEnabled(true);
+			getEditDtStartSeekBar().setProgress(mEvent.getDtStartinMinutes());
+			getEditDtEndSeekBar().setProgress(mEvent.getDtEndinMinutes());
+		} else {
+			getEditDtStartSeekBar().setProgress(0);
+			getEditDtEndSeekBar().setProgress(0);
+			getEditDtStartSeekBar().setEnabled(false);
+			getEditDtEndSeekBar().setEnabled(false);
+		}
+	}
+
+	private void dragExited(View view) {
 		changeBackgroundColor(view, Color.GREEN);
 	}
 
-	public void dragEntered(View view) {
+	private void dragEntered(View view) {
 		changeBackgroundColor(view, Color.BLUE);
 	}
 
-    public void recover(View view) {
+    private void recover(View view) {
     	changeBackgroundColor(view, Color.TRANSPARENT);
     }
 
@@ -88,12 +178,26 @@ public class EditEventFragment extends Fragment implements LoaderManager.LoaderC
 	private EditEventLayout getEditEventLayout() {
 		return (EditEventLayout) getActivity().findViewById(R.id.editEventFragment);
 	}
-	private SeekBar getEditDtStartSeekBar() { 
-		return (SeekBar) getActivity().findViewById(R.id.editDtStartSeekBar);
+
+	@Override
+	public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+		if (mEvent != null) {
+			final int id = seekbar.getId();
+			switch (id) {
+				case(R.id.editDtStartSeekBar):
+					mEvent.setDtStartinMinutes(progress);
+					break;
+				case(R.id.editDtEndSeekBar):
+					mEvent.setDtEndinMinutes(progress);
+					break;
+			}
+		}
+		refreshTextViews();
 	}
-	private SeekBar getEditDtEndSeekBar() {
-		return (SeekBar) getActivity().findViewById(R.id.editDtEndSeekBar);
-	}
+	@Override
+	public void onStartTrackingTouch(SeekBar seekbar) { }
+	@Override
+	public void onStopTrackingTouch(SeekBar seekbar) { }
 	
 	private Bundle getBundle(String eventId) {
 		Bundle bundle = new Bundle();
@@ -114,13 +218,13 @@ public class EditEventFragment extends Fragment implements LoaderManager.LoaderC
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (cursor.getCount() > 0) {
 			cursor.moveToNext();
-			getEditEventLayout().setViewWithEvent(new Event(cursor));
+			setWithEvent(new Event(cursor));
 		} else
-			getEditEventLayout().setViewWithoutEvent();
+			setWithoutEvent();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		getEditEventLayout().setViewWithoutEvent();		
+		setWithoutEvent();		
 	}
 }
