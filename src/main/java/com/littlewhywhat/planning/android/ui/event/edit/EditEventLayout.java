@@ -29,59 +29,65 @@ public class EditEventLayout extends RelativeLayout implements
 		mEventsResolver = new EventsResolver(context.getContentResolver());
 	}
 
-	public void processEvent(Event event) {
+	public void setViewWithoutEvent() {	
+		mEvent = null;
+		refreshTextViews();
+		refreshSeekBars();
+		getUpdateButton().setEnabled(false);
+		getDeleteButton().setEnabled(false);	
+	}
+
+	public void setViewWithEvent(Event event) {
 		mEvent = event;
-		getEditDtStartSeekBar().setEnabled(true);
-		getEditDtEndSeekBar().setEnabled(true);
+		refreshTextViews();
+		refreshSeekBars();
 		getUpdateButton().setEnabled(true);
 		getDeleteButton().setEnabled(true);
-				
-		refreshTextViews();
-		
-		getEditDtStartSeekBar().setProgress(event.getDtStartinMinutes());
-		getEditDtEndSeekBar().setProgress(event.getDtEndinMinutes());
-		
 		getUpdateButton().setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				mEventsResolver.Update(mEvent);				
 			}			
 		});
 		getDeleteButton().setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
-				mEventsResolver.Delete(mEvent);	
-				setViewWithoutEvent();
+				mEventsResolver.Delete(mEvent);
 			}			
 		});
 	}
 	private void refreshTextViews() {
-		getTitleView().setText(mEvent.getTitle());
-		getDtStartView().setText(mEvent.getDtStartInString());
-		getDtEndView().setText(mEvent.getDtEndInString());		
+		if (mEvent != null) {
+			getTitleView().setText(mEvent.getTitle());
+			getDtStartView().setText(mEvent.getDtStartInString());
+			getDtEndView().setText(mEvent.getDtEndInString());	
+		} else {
+			getTitleView().setText(R.string.drag_here);
+			getDtStartView().setText(null);
+			getDtEndView().setText(null);
+		}
 	}
+
+	private void refreshSeekBars() {
+		if (mEvent != null) {
+			getEditDtStartSeekBar().setEnabled(true);
+			getEditDtEndSeekBar().setEnabled(true);
+			getEditDtStartSeekBar().setProgress(mEvent.getDtStartinMinutes());
+			getEditDtEndSeekBar().setProgress(mEvent.getDtEndinMinutes());
+		} else {
+			getEditDtStartSeekBar().setProgress(0);
+			getEditDtEndSeekBar().setProgress(0);
+			getEditDtStartSeekBar().setEnabled(false);
+			getEditDtEndSeekBar().setEnabled(false);
+		}
+	}
+
 	private Button getUpdateButton() {
 		return (Button) findViewById(R.id.updateButton);
 	}
 	
 	private Button getDeleteButton() {
 		return (Button) findViewById(R.id.deleteButton);
-	}
-	
-	public void setViewWithoutEvent() {
-		getEditDtStartSeekBar().setProgress(0);
-		getEditDtEndSeekBar().setProgress(0);	
-		mEvent = null;
-		getEditDtStartSeekBar().setEnabled(false);
-		getEditDtEndSeekBar().setEnabled(false);
-		getUpdateButton().setEnabled(false);
-		getDeleteButton().setEnabled(false);
-		getTitleView().setText(R.string.drag_here);
-		getDtStartView().setText(null);
-		getDtEndView().setText(null);
-	
 	}
 	
 	private SeekBar getEditDtStartSeekBar() { 
@@ -104,25 +110,21 @@ public class EditEventLayout extends RelativeLayout implements
 	}
 	@Override
 	public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-		int id = seekbar.getId();
-		switch (id) {
-			case(R.id.editDtStartSeekBar) :
-			mEvent.setDtStartinMinutes(progress);
-			break;
-			case(R.id.editDtEndSeekBar) :
-			mEvent.setDtEndinMinutes(progress);
-			break;
+		if (mEvent != null) {
+			final int id = seekbar.getId();
+			switch (id) {
+				case(R.id.editDtStartSeekBar):
+					mEvent.setDtStartinMinutes(progress);
+					break;
+				case(R.id.editDtEndSeekBar):
+					mEvent.setDtEndinMinutes(progress);
+					break;
+			}
 		}
 		refreshTextViews();
 	}
 	@Override
-	public void onStartTrackingTouch(SeekBar seekbar) {
-		
-	}
+	public void onStartTrackingTouch(SeekBar seekbar) { }
 	@Override
-	public void onStopTrackingTouch(SeekBar seekbar) {
-		
-	}
-
-	
+	public void onStopTrackingTouch(SeekBar seekbar) { }
 }

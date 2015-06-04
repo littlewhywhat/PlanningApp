@@ -114,7 +114,7 @@ public class EditEventFragment extends Fragment implements LoaderManager.LoaderC
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (cursor.getCount() > 0) {
 			cursor.moveToNext();
-			getEditEventLayout().processEvent(new Event(cursor));
+			getEditEventLayout().setViewWithEvent(new Event(cursor));
 		} else
 			getEditEventLayout().setViewWithoutEvent();
 	}
