@@ -7,6 +7,7 @@ import android.provider.CalendarContract;
 import android.widget.TextView;
 import android.widget.SimpleCursorAdapter;
 
+import java.text.DateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
@@ -14,6 +15,7 @@ class EventsCursorAdapter extends SimpleCursorAdapter {
 	private static final String[] from = new String[] { CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND };
 	private static final int[] to = new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime};
 	private static final int ZERO_FLAG = 0;
+	private static final DateFormat DF = DateFormat.getDateInstance();
 
 	private Calendar mCalendar = new GregorianCalendar();
 

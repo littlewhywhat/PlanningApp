@@ -5,7 +5,6 @@ import com.littlewhywhat.planning.android.R;
 import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.data.event.EventsResolver;
 
-
 import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.DatePickerListener;
@@ -23,6 +22,7 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener {
 	private static final String DATEPICKER_FRAGMENT_TAG = "DatePickerFragment";
+	private static final String DEFAULT_EVENT_TITLE = "New Event";
 	private Calendar mCalendar;
 	private String mCalendarId;
 	private EventsResolver mEventsResolver;
@@ -72,7 +72,11 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		((Button)findViewById(R.id.insertDateButton)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Event event = new Event(mCalendarId, mCalendar.getTimeInMillis());
+				final Event event = Event.newInstance();
+				event.setCalendarId(mCalendarId);
+				event.getDtStart().setTimeInMillis(mCalendar.getTimeInMillis());
+				event.getDtEnd().setTimeInMillis(mCalendar.getTimeInMillis());
+				event.setTitle(DEFAULT_EVENT_TITLE);
 				mEventsResolver.Insert(event);
 			}			
 		});

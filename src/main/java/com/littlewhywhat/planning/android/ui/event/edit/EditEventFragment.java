@@ -13,6 +13,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract.Events;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -22,8 +23,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.RelativeLayout;
 
+import java.util.Calendar;
+
 public class EditEventFragment extends Fragment 
 		implements LoaderManager.LoaderCallbacks<Cursor>, SeekBar.OnSeekBarChangeListener {
+	private static final int MINUTES_IN_HOUR = 60;
 	private static final String EVENT_ID_KEY = "EVENT_ID";
 	private static final int LOADER_ID = 0;
 
@@ -141,8 +145,8 @@ public class EditEventFragment extends Fragment
 	private void refreshTextViews() {
 		if (mEvent != null) {
 			getTitleView().setText(mEvent.getTitle());
-			getDtStartView().setText(mEvent.getDtStartInString());
-			getDtEndView().setText(mEvent.getDtEndInString());	
+			getDtStartView().setText(mEvent.getDtStart().getTime().toString());
+			getDtEndView().setText(mEvent.getDtEnd().getTime().toString());	
 		} else {
 			getTitleView().setText(R.string.drag_here);
 			getDtStartView().setText(null);
@@ -154,14 +158,25 @@ public class EditEventFragment extends Fragment
 		if (mEvent != null) {
 			getEditDtStartSeekBar().setEnabled(true);
 			getEditDtEndSeekBar().setEnabled(true);
-			getEditDtStartSeekBar().setProgress(mEvent.getDtStartinMinutes());
-			getEditDtEndSeekBar().setProgress(mEvent.getDtEndinMinutes());
+			getEditDtStartSeekBar().setProgress(getMinutesOfDay(mEvent.getDtStart()));
+			getEditDtEndSeekBar().setProgress(getMinutesOfDay(mEvent.getDtEnd()));
 		} else {
 			getEditDtStartSeekBar().setProgress(0);
 			getEditDtEndSeekBar().setProgress(0);
 			getEditDtStartSeekBar().setEnabled(false);
 			getEditDtEndSeekBar().setEnabled(false);
 		}
+	}
+
+	private int getMinutesOfDay(Calendar calendar) {
+		final int hours = calendar.get(Calendar.HOUR_OF_DAY);
+		final int minutes = calendar.get(Calendar.MINUTE);
+		return hours * MINUTES_IN_HOUR + minutes;
+	}
+
+	private void setByMinutesOfDay(Calendar calendar, int minutesOfDay) {
+		calendar.set(Calendar.HOUR_OF_DAY, minutesOfDay / MINUTES_IN_HOUR);
+		calendar.set(Calendar.MINUTE, minutesOfDay % MINUTES_IN_HOUR);
 	}
 
 	private void dragExited(View view) {
@@ -187,10 +202,10 @@ public class EditEventFragment extends Fragment
 			final int id = seekbar.getId();
 			switch (id) {
 				case(R.id.editDtStartSeekBar):
-					mEvent.setDtStartinMinutes(progress);
+					setByMinutesOfDay(mEvent.getDtStart(), progress);
 					break;
 				case(R.id.editDtEndSeekBar):
-					mEvent.setDtEndinMinutes(progress);
+					setByMinutesOfDay(mEvent.getDtEnd(), progress);
 					break;
 			}
 		}
@@ -218,15 +233,24 @@ public class EditEventFragment extends Fragment
 	
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (cursor.getCount() > 0) {
-			cursor.moveToNext();
-			setWithEvent(new Event(cursor));
-		} else
+		if (cursor.moveToFirst())
+			setWithEvent(getEventFromCursor(cursor));
+		else
 			setWithoutEvent();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		setWithoutEvent();		
+	}
+
+	private Event getEventFromCursor(Cursor cursor) {
+		final Event event = Event.newInstance();
+		event.setId(cursor.getString(cursor.getColumnIndex(Events._ID)));
+		event.getDtStart().setTimeInMillis(cursor.getLong(cursor.getColumnIndex(Events.DTSTART)));
+		event.getDtEnd().setTimeInMillis(cursor.getLong(cursor.getColumnIndex(Events.DTEND)));
+		event.setTitle(cursor.getString(cursor.getColumnIndex(Events.TITLE)));
+		event.setCalendarId(cursor.getString(cursor.getColumnIndex(Events.CALENDAR_ID)));
+		return event;
 	}
 }

@@ -3,7 +3,6 @@ package com.littlewhywhat.planning.android.ui.event.view;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.EventsLoader;
-import com.littlewhywhat.planning.android.data.event.Event;
 import com.littlewhywhat.planning.android.ui.event.Drag;
 
 import android.app.Fragment;

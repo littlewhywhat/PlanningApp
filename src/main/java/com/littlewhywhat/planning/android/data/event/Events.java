@@ -33,8 +33,8 @@ class Events {
 		final ContentValues values = new ContentValues();		
 		values.put(CalendarContract.Events.CALENDAR_ID, event.getCalendarId());
 		values.put(CalendarContract.Events.EVENT_TIMEZONE, event.getTimeZone());
-		values.put(CalendarContract.Events.DTSTART, event.getDtStartinMillis());
-		values.put(CalendarContract.Events.DTEND, event.getDtEndinMillis());
+		values.put(CalendarContract.Events.DTSTART, event.getDtStart().getTimeInMillis());
+		values.put(CalendarContract.Events.DTEND, event.getDtEnd().getTimeInMillis());
 		values.put(CalendarContract.Events.TITLE, event.getTitle());
 		return values;
 	}
