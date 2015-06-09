@@ -11,6 +11,7 @@ import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.OnDatePicke
 import com.littlewhywhat.planning.android.ui.calendar.view.CalendarIdPickerFragment.OnCalendarIdPickedListener;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,31 +49,12 @@ public class MainActivity extends Activity implements OnCalendarIdPickedListener
 	    mDatePicked.clear(Calendar.MILLISECOND);
 	}
 
-	@Override 
-	public void onDatePickerStop() {
-		refresh();
-	}
-
 	@Override
 	public void onDatePicked(int year, int monthOfYear, int dayOfMonth) {
 		mDatePicked.set(Calendar.YEAR, year);
 		mDatePicked.set(Calendar.MONTH, monthOfYear);
 		mDatePicked.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-	}
-
-	@Override
-	public int getYear() {
-		return mDatePicked.get(Calendar.YEAR);
-	}
-
-	@Override
-	public int getMonth() {
-		return mDatePicked.get(Calendar.MONTH);
-	}
-
-	@Override
-	public int getDayOfMonth() {
-		return mDatePicked.get(Calendar.DAY_OF_MONTH);
+		refresh();
 	}
 	
 	@Override
@@ -99,7 +81,11 @@ public class MainActivity extends Activity implements OnCalendarIdPickedListener
 		((Button)findViewById(R.id.chooseDateButton)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				new DatePickerFragment().show(getFragmentManager(), DATEPICKER_FRAGMENT_TAG);
+				final int year = mDatePicked.get(Calendar.YEAR);
+				final int month = mDatePicked.get(Calendar.MONTH);
+				final int dayOfMonth = mDatePicked.get(Calendar.DAY_OF_MONTH);
+				final DialogFragment fragment = DatePickerFragment.newInstance(year, month, dayOfMonth);
+				fragment.show(getFragmentManager(), DATEPICKER_FRAGMENT_TAG);
 			};		
 		});
 	}
