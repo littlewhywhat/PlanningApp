@@ -3,7 +3,6 @@ package com.littlewhywhat.planning.android.ui.calendar.view;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.calendar.CalendarsLoader;
-import com.littlewhywhat.planning.android.data.calendar.Calendars;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,22 +17,22 @@ import android.widget.Spinner;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class CalendarsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-	public interface CalendarChooseListener {
-		public void onCalendarChoose(String calendarId);
+public class CalendarIdPickerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+	public interface OnCalendarIdPickedListener {
+		public void onCalendarIdPicked(String calendarId);
 	}
 
-	private static final String EXCEPTION_MESSAGE = " must implement CalendarChooseListener";
+	private static final String EXCEPTION_MESSAGE = " must implement OnCalendarIdPickedListener";
 	private static final int LOADER_ID = 0;
 	
-	private CalendarChooseListener mListener;
+	private OnCalendarIdPickedListener mListener;
 	private CalendarsCursorAdapter mCalendarsAdapter;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);		
 		try {
-			mListener = (CalendarChooseListener) activity;
+			mListener = (OnCalendarIdPickedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + EXCEPTION_MESSAGE);
 		}
@@ -41,7 +40,7 @@ public class CalendarsFragment extends Fragment implements LoaderManager.LoaderC
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.calendars_layout, container, false);
+		return inflater.inflate(R.layout.calendar_id_picker_layout, container, false);
 	}
 	
 	@Override
@@ -52,8 +51,7 @@ public class CalendarsFragment extends Fragment implements LoaderManager.LoaderC
 		getSpinner().setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				final Cursor calendar = (Cursor)parent.getItemAtPosition(position);
-				mListener.onCalendarChoose(calendar.getString(Calendars.PROJECTION_ID_INDEX));
+				mListener.onCalendarIdPicked(String.valueOf(id));
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) { }

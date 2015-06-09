@@ -6,23 +6,25 @@ import android.app.DialogFragment;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
-import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-	public interface DatePickerListener {
-		public Calendar getCalendar();
-		public void refresh();
+	public interface OnDatePickedListener {
+		public void onDatePicked(int year, int monthOfYear, int dayOfMonth);
+		public void onDatePickerStop();
+		public int getYear();
+		public int getMonth();
+		public int getDayOfMonth();
 	}
 
-	private static final String EXCEPTION_MESSAGE = " must implement OnArticleSelectedListener";
+	private static final String EXCEPTION_MESSAGE = " must implement OnDatePickedListener";
 	private boolean mFires = false;
-	private DatePickerListener mListener;
+	private OnDatePickedListener mListener;
 	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (DatePickerListener) activity;
+			mListener = (OnDatePickedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + EXCEPTION_MESSAGE);
 		}
@@ -30,21 +32,15 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final Calendar calendar = mListener.getCalendar();
-		return new DatePickerDialog(getActivity(), this, 
-									calendar.get(Calendar.YEAR), 
-									calendar.get(Calendar.MONTH),
-									calendar.get(Calendar.DAY_OF_MONTH));
+		return new DatePickerDialog(getActivity(), this, mListener.getYear(), mListener.getMonth(), 
+			mListener.getDayOfMonth());
 	}
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 		if (!mFires) {
 			mFires = true;
-			final Calendar calendar = mListener.getCalendar();
-			calendar.set(Calendar.YEAR, year);
-			calendar.set(Calendar.MONTH, monthOfYear);
-			calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			mListener.onDatePicked(year, monthOfYear, dayOfMonth);
 		}
 		else
 			mFires = false;
@@ -53,7 +49,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 	@Override
 	public void onStop() {
 		super.onStop();
-		mListener.refresh();
+		mListener.onDatePickerStop();
 	}
 }
 

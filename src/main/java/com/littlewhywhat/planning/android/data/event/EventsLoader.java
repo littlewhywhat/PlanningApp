@@ -8,5 +8,4 @@ public class EventsLoader extends CursorLoader {
 		super(context, Events.CONTENT_URI , Events.EVENT_PROJECTION, Events.selection, 
 				new String[] { dtStart, dtEnd, calendarId}, null);
 	}
-
 }

@@ -7,10 +7,10 @@
 
     <fragment
         android:id="@+id/calendarsFragment"
-        android:name="com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment"
+        android:name="com.littlewhywhat.planning.android.ui.calendar.view.CalendarIdPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/calendars_layout" />
+        tools:layout="@layout/calendar_id_picker_layout" />
 
     <TextView
         android:id="@+id/timeView"

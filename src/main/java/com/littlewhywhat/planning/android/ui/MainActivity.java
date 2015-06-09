@@ -7,8 +7,8 @@ import com.littlewhywhat.planning.android.data.event.EventsResolver;
 
 import com.littlewhywhat.planning.android.ui.event.view.EventsFragment;
 import com.littlewhywhat.planning.android.ui.util.DatePickerFragment;
-import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.DatePickerListener;
-import com.littlewhywhat.planning.android.ui.calendar.view.CalendarsFragment.CalendarChooseListener;
+import com.littlewhywhat.planning.android.ui.util.DatePickerFragment.OnDatePickedListener;
+import com.littlewhywhat.planning.android.ui.calendar.view.CalendarIdPickerFragment.OnCalendarIdPickedListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,12 +21,12 @@ import java.text.DateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
-public class MainActivity extends Activity implements CalendarChooseListener, DatePickerListener {
+public class MainActivity extends Activity implements OnCalendarIdPickedListener, OnDatePickedListener {
 	private static final String DATEPICKER_FRAGMENT_TAG = "DatePickerFragment";
 	private static final String DEFAULT_EVENT_TITLE = "New Event";
 	private static final DateFormat DF = DateFormat.getDateInstance();
-	private Calendar mCalendar;
-	private String mCalendarId;
+	private Calendar mDatePicked;
+	private String mCalendarIdPicked;
 	private EventsResolver mEventsResolver;
 
 	@Override
@@ -34,40 +34,51 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);
 		mEventsResolver = new EventsResolver(getContentResolver());
-		setDefaultDate();
-		setTimeViewText();
+		setDefaultDatePicked();
 		setChooseDateButton();
 		setInsertEventButton();
 	}
 
+	private void setDefaultDatePicked() {
+	    mDatePicked = new GregorianCalendar();
+	    mDatePicked.clear(Calendar.HOUR_OF_DAY);
+	    mDatePicked.clear(Calendar.HOUR);
+	    mDatePicked.clear(Calendar.MINUTE);
+	    mDatePicked.clear(Calendar.SECOND);
+	    mDatePicked.clear(Calendar.MILLISECOND);
+	}
+
 	@Override 
-	public void refresh() {
-		setTimeViewText();
-		refreshEvents();
+	public void onDatePickerStop() {
+		refresh();
 	}
 
 	@Override
-	public Calendar getCalendar() {
-		return mCalendar;
+	public void onDatePicked(int year, int monthOfYear, int dayOfMonth) {
+		mDatePicked.set(Calendar.YEAR, year);
+		mDatePicked.set(Calendar.MONTH, monthOfYear);
+		mDatePicked.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+	}
+
+	@Override
+	public int getYear() {
+		return mDatePicked.get(Calendar.YEAR);
+	}
+
+	@Override
+	public int getMonth() {
+		return mDatePicked.get(Calendar.MONTH);
+	}
+
+	@Override
+	public int getDayOfMonth() {
+		return mDatePicked.get(Calendar.DAY_OF_MONTH);
 	}
 	
 	@Override
-	public void onCalendarChoose(String calendarId) {		
-		mCalendarId = calendarId;
-		refreshEvents();
-	}
-
-	private void setDefaultDate() {
-	    mCalendar = new GregorianCalendar();
-	    mCalendar.clear(Calendar.HOUR_OF_DAY);
-	    mCalendar.clear(Calendar.HOUR);
-	    mCalendar.clear(Calendar.MINUTE);
-	    mCalendar.clear(Calendar.SECOND);
-	    mCalendar.clear(Calendar.MILLISECOND);
-	}
-
-	private void setTimeViewText() {
-		((TextView)findViewById(R.id.timeView)).setText(DF.format(mCalendar.getTime()));
+	public void onCalendarIdPicked(String calendarId) {		
+		mCalendarIdPicked = calendarId;
+		refresh();
 	}
 
 	private void setInsertEventButton() {
@@ -75,9 +86,9 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 			@Override
 			public void onClick(View view) {
 				final Event event = Event.newInstance();
-				event.setCalendarId(mCalendarId);
-				event.getDtStart().setTimeInMillis(mCalendar.getTimeInMillis());
-				event.getDtEnd().setTimeInMillis(mCalendar.getTimeInMillis());
+				event.setCalendarId(mCalendarIdPicked);
+				event.getDtStart().setTimeInMillis(mDatePicked.getTimeInMillis());
+				event.getDtEnd().setTimeInMillis(mDatePicked.getTimeInMillis());
 				event.setTitle(DEFAULT_EVENT_TITLE);
 				mEventsResolver.Insert(event);
 			}			
@@ -88,21 +99,26 @@ public class MainActivity extends Activity implements CalendarChooseListener, Da
 		((Button)findViewById(R.id.chooseDateButton)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				showDatePickerDialog();		
+				new DatePickerFragment().show(getFragmentManager(), DATEPICKER_FRAGMENT_TAG);
 			};		
 		});
 	}
-
-	private void showDatePickerDialog() {
-		new DatePickerFragment().show(getFragmentManager(), DATEPICKER_FRAGMENT_TAG);
-	}
 	
+	private void refresh() {
+		refreshTimeView();
+		refreshEvents();
+	}
+
+	private void refreshTimeView() {
+		((TextView)findViewById(R.id.timeView)).setText(DF.format(mDatePicked.getTime()));
+	}
+
 	private void refreshEvents() {
-		final long dtStart = mCalendar.getTimeInMillis();
-		mCalendar.roll(Calendar.DAY_OF_MONTH, true);
-		final long dtEnd = mCalendar.getTimeInMillis();
-		mCalendar.roll(Calendar.DAY_OF_MONTH, false);
+		final long dtStart = mDatePicked.getTimeInMillis();
+		mDatePicked.roll(Calendar.DAY_OF_MONTH, true);
+		final long dtEnd = mDatePicked.getTimeInMillis();
+		mDatePicked.roll(Calendar.DAY_OF_MONTH, false);
 		final EventsFragment fragment = (EventsFragment)getFragmentManager().findFragmentById(R.id.eventsFragment);
-		fragment.restartLoader(dtStart, dtEnd, mCalendarId);
+		fragment.restartLoader(dtStart, dtEnd, mCalendarIdPicked);
 	}
 }
