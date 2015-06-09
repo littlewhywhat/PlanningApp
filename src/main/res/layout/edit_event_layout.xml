@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/editDtEndSeekBar"
-        android:text="@string/drag_here"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView

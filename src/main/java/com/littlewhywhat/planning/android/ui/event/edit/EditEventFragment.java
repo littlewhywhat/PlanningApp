@@ -30,6 +30,7 @@ public class EditEventFragment extends Fragment
 		implements LoaderManager.LoaderCallbacks<Cursor>, SeekBar.OnSeekBarChangeListener {
 	private static final int MINUTES_IN_HOUR = 60;
 	private static final String EVENT_ID_KEY = "EVENT_ID";
+	private static final String DEFAULT_TITLE_TEXT = "Drag event here!";
 	private static final int LOADER_ID = 0;
 	private static final DateFormat DF = DateFormat.getTimeInstance();
 
@@ -138,7 +139,7 @@ public class EditEventFragment extends Fragment
 			getUpdateButton().setEnabled(true);
 			getDeleteButton().setEnabled(true);
 		} else {
-			setTextViews("Drag event here!", null, null);
+			setTextViews(DEFAULT_TITLE_TEXT, null, null);
 			setSeekBarsListener(null);
 			setSeekBars(0, 0, false);
 			getUpdateButton().setEnabled(false);
