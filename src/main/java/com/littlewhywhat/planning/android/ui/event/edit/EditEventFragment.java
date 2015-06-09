@@ -44,13 +44,11 @@ public class EditEventFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState)	{
 		super.onActivityCreated(savedInstanceState);	
 		mEventsResolver = new EventsResolver(getActivity().getContentResolver());
-		setListeners();
-		setWithoutEvent();	
+		setPermanentListeners();
+		refresh();
 	}
 
-	private void setListeners() {
-		getEditDtStartSeekBar().setOnSeekBarChangeListener(this);
-		getEditDtEndSeekBar().setOnSeekBarChangeListener(this);
+	private void setPermanentListeners() {
 		getEditEventLayout().setOnDragListener(new View.OnDragListener() {
 			@Override
 			public boolean onDrag(View v, DragEvent event) {
@@ -128,46 +126,42 @@ public class EditEventFragment extends Fragment
 		return (RelativeLayout) getActivity().findViewById(R.id.editEventFragment);
 	}
 
-	private void setWithoutEvent() {
-		mEvent = null;
-		refreshTextViews();
-		refreshSeekBars();
-		getUpdateButton().setEnabled(false);
-		getDeleteButton().setEnabled(false);
-	}
-
-	private void setWithEvent(Event event) {
-		mEvent = event;
-		refreshTextViews();
-		refreshSeekBars();
-		getUpdateButton().setEnabled(true);
-		getDeleteButton().setEnabled(true);
-	}
-
-	private void refreshTextViews() {
+	private void refresh() {
 		if (mEvent != null) {
-			getTitleView().setText(mEvent.getTitle());
-			getDtStartView().setText(DF.format(mEvent.getDtStart().getTime()));
-			getDtEndView().setText(DF.format(mEvent.getDtEnd().getTime()));	
+			final String dtStart = DF.format(mEvent.getDtStart().getTime());
+			final String dtEnd = DF.format(mEvent.getDtEnd().getTime());
+			setTextViews(mEvent.getTitle(), dtStart, dtEnd);
+			setSeekBarsListener(this);
+			final int dtStartMinutes = getMinutesOfDay(mEvent.getDtStart());
+			final int dtEndMinutes = getMinutesOfDay(mEvent.getDtEnd());
+			setSeekBars(dtStartMinutes, dtEndMinutes, true);
+			getUpdateButton().setEnabled(true);
+			getDeleteButton().setEnabled(true);
 		} else {
-			getTitleView().setText(R.string.drag_here);
-			getDtStartView().setText(null);
-			getDtEndView().setText(null);
+			setTextViews("Drag event here!", null, null);
+			setSeekBarsListener(null);
+			setSeekBars(0, 0, false);
+			getUpdateButton().setEnabled(false);
+			getDeleteButton().setEnabled(false);
 		}
 	}
 
-	private void refreshSeekBars() {
-		if (mEvent != null) {
-			getEditDtStartSeekBar().setEnabled(true);
-			getEditDtEndSeekBar().setEnabled(true);
-			getEditDtStartSeekBar().setProgress(getMinutesOfDay(mEvent.getDtStart()));
-			getEditDtEndSeekBar().setProgress(getMinutesOfDay(mEvent.getDtEnd()));
-		} else {
-			getEditDtStartSeekBar().setProgress(0);
-			getEditDtEndSeekBar().setProgress(0);
-			getEditDtStartSeekBar().setEnabled(false);
-			getEditDtEndSeekBar().setEnabled(false);
-		}
+	private void setSeekBarsListener(SeekBar.OnSeekBarChangeListener listener) {
+		getEditDtStartSeekBar().setOnSeekBarChangeListener(listener);
+		getEditDtEndSeekBar().setOnSeekBarChangeListener(listener);
+	}
+
+	private void setTextViews(String title, String dtStart, String dtEnd) {
+		getTitleView().setText(title);
+		getDtStartView().setText(dtStart);
+		getDtEndView().setText(dtEnd);	
+	}
+
+	private void setSeekBars(int startProgress, int endProgress, boolean isEnabled) {
+		getEditDtStartSeekBar().setEnabled(isEnabled);
+		getEditDtEndSeekBar().setEnabled(isEnabled);
+		getEditDtStartSeekBar().setProgress(startProgress);
+		getEditDtEndSeekBar().setProgress(endProgress);
 	}
 
 	private int getMinutesOfDay(Calendar calendar) {
@@ -200,18 +194,16 @@ public class EditEventFragment extends Fragment
 
 	@Override
 	public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-		if (mEvent != null) {
-			final int id = seekbar.getId();
-			switch (id) {
-				case(R.id.editDtStartSeekBar):
-					setByMinutesOfDay(mEvent.getDtStart(), progress);
-					break;
-				case(R.id.editDtEndSeekBar):
-					setByMinutesOfDay(mEvent.getDtEnd(), progress);
-					break;
-			}
+		final int id = seekbar.getId();
+		switch (id) {
+			case(R.id.editDtStartSeekBar):
+				setByMinutesOfDay(mEvent.getDtStart(), progress);
+				break;
+			case(R.id.editDtEndSeekBar):
+				setByMinutesOfDay(mEvent.getDtEnd(), progress);
+				break;
 		}
-		refreshTextViews();
+		refresh();
 	}
 	@Override
 	public void onStartTrackingTouch(SeekBar seekbar) { }
@@ -236,14 +228,16 @@ public class EditEventFragment extends Fragment
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (cursor.moveToFirst())
-			setWithEvent(getEventFromCursor(cursor));
+			mEvent = getEventFromCursor(cursor);
 		else
-			setWithoutEvent();
+		 	mEvent = null;
+		refresh();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		setWithoutEvent();		
+		mEvent = null;
+		refresh();		
 	}
 
 	private Event getEventFromCursor(Cursor cursor) {
