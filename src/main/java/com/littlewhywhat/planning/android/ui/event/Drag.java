@@ -21,5 +21,4 @@ public class Drag {
     public static String getEventId(ClipData data) {
         return (String)data.getItemAt(DRAG_CLIP_ID_INDEX).getText();
     }
-	
 }

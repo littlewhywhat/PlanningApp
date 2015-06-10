@@ -7,10 +7,10 @@ import android.provider.CalendarContract.Calendars;
 import android.widget.SimpleCursorAdapter;
 
 class CalendarsCursorAdapter extends SimpleCursorAdapter {
-	private final static String[] from = new String[] { Calendars.CALENDAR_DISPLAY_NAME };
-	private final static int[] to = new int[] { R.id.calendarTitle };
-	public CalendarsCursorAdapter(Context context) {
-		super(context, R.layout.calendar, null, from, to, 0);		
-	}
+	private final static String[] FROM = new String[] { Calendars.CALENDAR_DISPLAY_NAME };
+	private final static int[] TO = new int[] { R.id.calendarTitle };
 
+	public CalendarsCursorAdapter(Context context) {
+		super(context, R.layout.calendar, null, FROM, TO, 0);		
+	}
 }

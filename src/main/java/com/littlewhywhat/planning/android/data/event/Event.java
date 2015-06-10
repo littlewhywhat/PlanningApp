@@ -9,7 +9,7 @@ public class Event {
 	private String mCalendarId;
 	private Calendar mDtStart;
 	private Calendar mDtEnd;
-	
+
 	public static Event newInstance() {
 		final Event event = new Event();
 		return event;
@@ -39,15 +39,15 @@ public class Event {
 	public void setTitle(String title) {
 		mTitle = title;
 	}
-   	
-   	public String getTitle() {
-   		return mTitle;
-   	}
+
+	public String getTitle() {
+		return mTitle;
+	}
 
 	public void setCalendarId(String calendarId) {
 		mCalendarId = calendarId;
 	}
-   	
+
 	public String getCalendarId() {
 		return mCalendarId;
 	}

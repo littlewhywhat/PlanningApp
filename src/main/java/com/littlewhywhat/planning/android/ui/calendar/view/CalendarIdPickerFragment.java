@@ -37,12 +37,12 @@ public class CalendarIdPickerFragment extends Fragment implements LoaderManager.
 			throw new ClassCastException(activity.toString() + EXCEPTION_MESSAGE);
 		}
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.calendar_id_picker_layout, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

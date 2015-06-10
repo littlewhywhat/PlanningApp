@@ -78,5 +78,3 @@ public class EventsFragment extends Fragment implements LoaderManager.LoaderCall
 		mEventsAdapter.swapCursor(null);		
 	}
 }
-
-

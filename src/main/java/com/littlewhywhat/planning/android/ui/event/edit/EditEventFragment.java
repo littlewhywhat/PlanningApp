@@ -41,6 +41,7 @@ public class EditEventFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.edit_event_layout, container, false);
 	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)	{
 		super.onActivityCreated(savedInstanceState);	
@@ -53,32 +54,32 @@ public class EditEventFragment extends Fragment
 		getEditEventLayout().setOnDragListener(new View.OnDragListener() {
 			@Override
 			public boolean onDrag(View v, DragEvent event) {
-	            final int action = event.getAction();
-	            switch(action) {
-	                case DragEvent.ACTION_DRAG_STARTED:
-	                    if (Drag.checkEvent(event)) {
-	                    	dragExited(v);
-	                    	return true;
-	                	}
-	                	return false;
-	                case DragEvent.ACTION_DRAG_EXITED:
-	                	dragExited(v);
-	                	return true;
-	                case DragEvent.ACTION_DRAG_ENTERED:
-	                    dragEntered(v);
-	                    return true;
-	                case DragEvent.ACTION_DRAG_LOCATION:
-	                    return true;
-	                case DragEvent.ACTION_DROP:                	
-	                    restartLoader(Drag.getEventId(event.getClipData()));
-	                	recover(v);
-	                	return true;      
-	                case DragEvent.ACTION_DRAG_ENDED:
-	                	recover(v);
-	                	return true;
-	                default:
-	                    return false;
-	            }
+				final int action = event.getAction();
+				switch(action) {
+					case DragEvent.ACTION_DRAG_STARTED:
+						if (Drag.checkEvent(event)) {
+							dragExited(v);
+							return true;
+						}
+						return false;
+					case DragEvent.ACTION_DRAG_EXITED:
+						dragExited(v);
+						return true;
+					case DragEvent.ACTION_DRAG_ENTERED:
+						dragEntered(v);
+						return true;
+					case DragEvent.ACTION_DRAG_LOCATION:
+						return true;
+					case DragEvent.ACTION_DROP:                	
+						restartLoader(Drag.getEventId(event.getClipData()));
+						recover(v);
+						return true;      
+					case DragEvent.ACTION_DRAG_ENDED:
+						recover(v);
+						return true;
+					default:
+						return false;
+				}
 			}
 		});
 		getUpdateButton().setOnClickListener(new View.OnClickListener() {
@@ -94,15 +95,15 @@ public class EditEventFragment extends Fragment
 			}			
 		});
 	}
-	
+
 	private Button getUpdateButton() {
 		return (Button) getActivity().findViewById(R.id.updateButton);
 	}
-	
+
 	private Button getDeleteButton() {
 		return (Button) getActivity().findViewById(R.id.deleteButton);
 	}
-	
+
 	private SeekBar getEditDtStartSeekBar() { 
 		return (SeekBar) getActivity().findViewById(R.id.editDtStartSeekBar);
 	}
@@ -110,7 +111,7 @@ public class EditEventFragment extends Fragment
 	private SeekBar getEditDtEndSeekBar() {
 		return (SeekBar) getActivity().findViewById(R.id.editDtEndSeekBar);
 	}
-	
+
 	private TextView getDtEndView() {
 		return (TextView) getActivity().findViewById(R.id.editDtEndView);
 	}
@@ -184,14 +185,14 @@ public class EditEventFragment extends Fragment
 		changeBackgroundColor(view, Color.BLUE);
 	}
 
-    private void recover(View view) {
-    	changeBackgroundColor(view, Color.TRANSPARENT);
-    }
+	private void recover(View view) {
+		changeBackgroundColor(view, Color.TRANSPARENT);
+	}
 
-    private void changeBackgroundColor(View view, int color) {
-        view.setBackgroundColor(color);
-        view.invalidate();
-    }
+	private void changeBackgroundColor(View view, int color) {
+		view.setBackgroundColor(color);
+		view.invalidate();
+	}
 
 	@Override
 	public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
@@ -210,22 +211,22 @@ public class EditEventFragment extends Fragment
 	public void onStartTrackingTouch(SeekBar seekbar) { }
 	@Override
 	public void onStopTrackingTouch(SeekBar seekbar) { }
-	
+
 	private Bundle getBundle(String eventId) {
 		Bundle bundle = new Bundle();
 		bundle.putString(EVENT_ID_KEY, eventId);
 		return bundle;
 	}
-	
+
 	private void restartLoader(String eventId) {
 		getLoaderManager().restartLoader(LOADER_ID, getBundle(eventId), this);
 	}
 
-    @Override
+	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new EventsLoaderById(getActivity(), args.getString(EVENT_ID_KEY));
 	}
-	
+
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (cursor.moveToFirst())
