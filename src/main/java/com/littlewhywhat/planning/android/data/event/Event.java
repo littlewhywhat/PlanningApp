@@ -1,24 +1,18 @@
 package com.littlewhywhat.planning.android.data.event;
 
-import java.util.GregorianCalendar;
-import java.util.Calendar;
-
 public class Event {
 	private String mId;
 	private String mTitle;
 	private String mCalendarId;
-	private Calendar mDtStart;
-	private Calendar mDtEnd;
+	private String mTimeZone;
+	private long mDtStart;
+	private long mDtEnd;
 
 	public static Event newInstance() {
-		final Event event = new Event();
-		return event;
+		return new Event();
 	}
 
-	private Event() {
-		mDtStart = new GregorianCalendar();
-		mDtEnd = (Calendar)mDtStart.clone();
-	}
+	private Event() { }
 
 	public String getId() {
 		return mId;
@@ -28,12 +22,20 @@ public class Event {
 		mId = id;
 	}
 
-	public Calendar getDtStart() {
+	public long getDtStart() {
 		return mDtStart;
 	}
 
-	public Calendar getDtEnd() {
+	public void setDtStart(long millis) {
+		mDtStart = millis;
+	}
+
+	public long getDtEnd() {
 		return mDtEnd;
+	}
+
+	public void setDtEnd(long millis) {
+		mDtEnd = millis;
 	}
 
 	public void setTitle(String title) {
@@ -53,6 +55,10 @@ public class Event {
 	}
 
 	public String getTimeZone() {
-		return mDtStart.getTimeZone().getDisplayName();
+		return mTimeZone;
+	}
+
+	public void setTimeZone(String timeZone) {
+		mTimeZone = timeZone;
 	}
 }

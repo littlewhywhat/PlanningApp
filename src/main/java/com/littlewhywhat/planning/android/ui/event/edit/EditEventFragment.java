@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.RelativeLayout;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.text.DateFormat;
 
 public class EditEventFragment extends Fragment 
@@ -35,6 +36,7 @@ public class EditEventFragment extends Fragment
 	private static final DateFormat DF = DateFormat.getTimeInstance();
 
 	private Event mEvent;
+	private Calendar mCalendar = new GregorianCalendar();
 	private EventsResolver mEventsResolver;
 
 	@Override
@@ -130,12 +132,12 @@ public class EditEventFragment extends Fragment
 
 	private void refresh() {
 		if (mEvent != null) {
-			final String dtStart = DF.format(mEvent.getDtStart().getTime());
-			final String dtEnd = DF.format(mEvent.getDtEnd().getTime());
+			final String dtStart = formatMillis(mEvent.getDtStart());
+			final String dtEnd = formatMillis(mEvent.getDtEnd());
 			setTextViews(mEvent.getTitle(), dtStart, dtEnd);
 			setSeekBarsListener(this);
-			final int dtStartMinutes = getMinutesOfDay(mEvent.getDtStart());
-			final int dtEndMinutes = getMinutesOfDay(mEvent.getDtEnd());
+			final int dtStartMinutes = millisToMinutesOfDay(mEvent.getDtStart());
+			final int dtEndMinutes = millisToMinutesOfDay(mEvent.getDtEnd());
 			setSeekBars(dtStartMinutes, dtEndMinutes, true);
 			getUpdateButton().setEnabled(true);
 			getDeleteButton().setEnabled(true);
@@ -146,6 +148,11 @@ public class EditEventFragment extends Fragment
 			getUpdateButton().setEnabled(false);
 			getDeleteButton().setEnabled(false);
 		}
+	}
+
+	private String formatMillis(long millis) {
+		mCalendar.setTimeInMillis(millis);
+		return DF.format(mCalendar.getTime());
 	}
 
 	private void setSeekBarsListener(SeekBar.OnSeekBarChangeListener listener) {
@@ -166,15 +173,17 @@ public class EditEventFragment extends Fragment
 		getEditDtEndSeekBar().setProgress(endProgress);
 	}
 
-	private int getMinutesOfDay(Calendar calendar) {
-		final int hours = calendar.get(Calendar.HOUR_OF_DAY);
-		final int minutes = calendar.get(Calendar.MINUTE);
+	private int millisToMinutesOfDay(long millis) {
+		mCalendar.setTimeInMillis(millis);
+		final int hours = mCalendar.get(Calendar.HOUR_OF_DAY);
+		final int minutes = mCalendar.get(Calendar.MINUTE);
 		return hours * MINUTES_IN_HOUR + minutes;
 	}
 
-	private void setByMinutesOfDay(Calendar calendar, int minutesOfDay) {
-		calendar.set(Calendar.HOUR_OF_DAY, minutesOfDay / MINUTES_IN_HOUR);
-		calendar.set(Calendar.MINUTE, minutesOfDay % MINUTES_IN_HOUR);
+	private long minutesOfDayToMillis(int minutesOfDay) {
+		mCalendar.set(Calendar.HOUR_OF_DAY, minutesOfDay / MINUTES_IN_HOUR);
+		mCalendar.set(Calendar.MINUTE, minutesOfDay % MINUTES_IN_HOUR);
+		return mCalendar.getTimeInMillis();
 	}
 
 	private void dragExited(View view) {
@@ -199,10 +208,10 @@ public class EditEventFragment extends Fragment
 		final int id = seekbar.getId();
 		switch (id) {
 			case(R.id.editDtStartSeekBar):
-				setByMinutesOfDay(mEvent.getDtStart(), progress);
+				mEvent.setDtStart(minutesOfDayToMillis(progress));
 				break;
 			case(R.id.editDtEndSeekBar):
-				setByMinutesOfDay(mEvent.getDtEnd(), progress);
+				mEvent.setDtEnd(minutesOfDayToMillis(progress));
 				break;
 		}
 		refresh();
@@ -245,10 +254,11 @@ public class EditEventFragment extends Fragment
 	private Event getEventFromCursor(Cursor cursor) {
 		final Event event = Event.newInstance();
 		event.setId(cursor.getString(Events.ID_INDEX));
-		event.getDtStart().setTimeInMillis(cursor.getLong(Events.DTSTART_INDEX));
-		event.getDtEnd().setTimeInMillis(cursor.getLong(Events.DTEND_INDEX));
+		event.setDtStart(cursor.getLong(Events.DTSTART_INDEX));
+		event.setDtEnd(cursor.getLong(Events.DTEND_INDEX));
 		event.setTitle(cursor.getString(Events.TITLE_INDEX));
 		event.setCalendarId(cursor.getString(Events.CALENDARID_INDEX));
+		event.setTimeZone(cursor.getString(Events.TIMEZONE_INDEX));
 		return event;
 	}
 }

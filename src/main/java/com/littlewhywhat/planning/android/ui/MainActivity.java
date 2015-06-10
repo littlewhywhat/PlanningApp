@@ -69,9 +69,10 @@ public class MainActivity extends Activity implements OnCalendarIdPickedListener
 			public void onClick(View view) {
 				final Event event = Event.newInstance();
 				event.setCalendarId(mCalendarIdPicked);
-				event.getDtStart().setTimeInMillis(mDatePicked.getTimeInMillis());
-				event.getDtEnd().setTimeInMillis(mDatePicked.getTimeInMillis());
+				event.setDtStart(mDatePicked.getTimeInMillis());
+				event.setDtEnd(mDatePicked.getTimeInMillis());
 				event.setTitle(DEFAULT_EVENT_TITLE);
+				event.setTimeZone(mDatePicked.getTimeZone().getDisplayName());
 				mEventsResolver.Insert(event);
 			}			
 		});
