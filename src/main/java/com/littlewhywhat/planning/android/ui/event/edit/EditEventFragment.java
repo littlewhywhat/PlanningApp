@@ -3,6 +3,7 @@ package com.littlewhywhat.planning.android.ui.event.edit;
 import com.littlewhywhat.planning.android.R;
 
 import com.littlewhywhat.planning.android.data.event.Event;
+import com.littlewhywhat.planning.android.data.event.Events;
 import com.littlewhywhat.planning.android.data.event.EventsLoaderById;
 import com.littlewhywhat.planning.android.data.event.EventsResolver;
 import com.littlewhywhat.planning.android.ui.event.Drag;
@@ -13,7 +14,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract.Events;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -244,11 +244,11 @@ public class EditEventFragment extends Fragment
 
 	private Event getEventFromCursor(Cursor cursor) {
 		final Event event = Event.newInstance();
-		event.setId(cursor.getString(cursor.getColumnIndex(Events._ID)));
-		event.getDtStart().setTimeInMillis(cursor.getLong(cursor.getColumnIndex(Events.DTSTART)));
-		event.getDtEnd().setTimeInMillis(cursor.getLong(cursor.getColumnIndex(Events.DTEND)));
-		event.setTitle(cursor.getString(cursor.getColumnIndex(Events.TITLE)));
-		event.setCalendarId(cursor.getString(cursor.getColumnIndex(Events.CALENDAR_ID)));
+		event.setId(cursor.getString(Events.ID_INDEX));
+		event.getDtStart().setTimeInMillis(cursor.getLong(Events.DTSTART_INDEX));
+		event.getDtEnd().setTimeInMillis(cursor.getLong(Events.DTEND_INDEX));
+		event.setTitle(cursor.getString(Events.TITLE_INDEX));
+		event.setCalendarId(cursor.getString(Events.CALENDARID_INDEX));
 		return event;
 	}
 }

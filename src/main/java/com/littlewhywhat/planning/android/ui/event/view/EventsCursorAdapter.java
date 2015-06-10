@@ -2,8 +2,9 @@ package com.littlewhywhat.planning.android.ui.event.view;
 
 import com.littlewhywhat.planning.android.R;
 
+import com.littlewhywhat.planning.android.data.event.Events;
+
 import android.content.Context;
-import android.provider.CalendarContract;
 import android.widget.TextView;
 import android.widget.SimpleCursorAdapter;
 
@@ -12,15 +13,19 @@ import java.util.GregorianCalendar;
 import java.util.Calendar;
 
 class EventsCursorAdapter extends SimpleCursorAdapter {
-	private static final String[] from = new String[] { CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND };
-	private static final int[] to = new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime};
+	private static final String[] FROM = new String[] { 
+		Events.PROJECTION[Events.TITLE_INDEX], 
+		Events.PROJECTION[Events.DTSTART_INDEX], 
+		Events.PROJECTION[Events.DTEND_INDEX] 
+	};
+	private static final int[] TO = new int[] { R.id.eventTitle, R.id.eventStartTime, R.id.eventEndTime};
 	private static final int ZERO_FLAG = 0;
 	private static final DateFormat DF = DateFormat.getTimeInstance();
 
 	private Calendar mCalendar = new GregorianCalendar();
 
 	public EventsCursorAdapter(Context context) {
-		super(context, R.layout.event, null , from, to, ZERO_FLAG);
+		super(context, R.layout.event, null , FROM, TO, ZERO_FLAG);
 	}
 
 	@Override
